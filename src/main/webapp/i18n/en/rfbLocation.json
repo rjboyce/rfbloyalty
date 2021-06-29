@@ -1,0 +1,26 @@
+{
+  "rfbloyaltyApp": {
+    "rfbLocation": {
+      "home": {
+        "title": "Rfb Locations",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Rfb Location",
+        "createOrEditLabel": "Create or edit a Rfb Location",
+        "notFound": "No Rfb Locations found"
+      },
+      "created": "A new Rfb Location is created with identifier {{ param }}",
+      "updated": "A Rfb Location is updated with identifier {{ param }}",
+      "deleted": "A Rfb Location is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rfb Location {{ id }}?"
+      },
+      "detail": {
+        "title": "Rfb Location"
+      },
+      "id": "ID",
+      "locationName": "Location Name",
+      "runDayOfWeek": "Run Day Of Week",
+      "rfbEvent": "Rfb Event"
+    }
+  }
+}

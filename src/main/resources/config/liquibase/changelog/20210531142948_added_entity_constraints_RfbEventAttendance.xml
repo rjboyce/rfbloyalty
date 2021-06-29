@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity RfbEventAttendance.
+    -->
+    <changeSet id="20210531142948-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="rfb_event_id"
+                                 baseTableName="rfb_event_attendance"
+                                 constraintName="fk_rfb_event_attendance__rfb_event_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="rfb_event"/>
+
+        <addForeignKeyConstraint baseColumnNames="application_user_id"
+                                 baseTableName="rfb_event_attendance"
+                                 constraintName="fk_rfb_event_attendance__application_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="application_user"/>
+    </changeSet>
+</databaseChangeLog>

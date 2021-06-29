@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-application-user-heading"
+        data-cy="ApplicationUserCreateUpdateHeading"
+        jhiTranslate="rfbloyaltyApp.applicationUser.home.createOrEditLabel"
+      >
+        Create or edit a Application User
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.login" for="field_login">Login</label>
+          <input type="text" class="form-control" name="login" id="field_login" data-cy="login" formControlName="login" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.firstName" for="field_firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.lastName" for="field_lastName">Last Name</label>
+          <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.email" for="field_email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.langKey" for="field_langKey">Lang Key</label>
+          <input type="text" class="form-control" name="langKey" id="field_langKey" data-cy="langKey" formControlName="langKey" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.imageUrl" for="field_imageUrl">Image Url</label>
+          <input type="text" class="form-control" name="imageUrl" id="field_imageUrl" data-cy="imageUrl" formControlName="imageUrl" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="rfbloyaltyApp.applicationUser.homeLocation" for="field_homeLocation"
+            >Home Location</label
+          >
+          <select class="form-control" id="field_homeLocation" data-cy="homeLocation" name="homeLocation" formControlName="homeLocation">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                rfbLocationOption.id === editForm.get('homeLocation')!.value?.id ? editForm.get('homeLocation')!.value : rfbLocationOption
+              "
+              *ngFor="let rfbLocationOption of homeLocationsCollection; trackBy: trackRfbLocationById"
+            >
+              {{ rfbLocationOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -16,6 +16,7 @@ services:
       ]
     volumes:
       - ./realm-config:/opt/jboss/keycloak/realm-config
+      #- ./keycloak-bcrypt-1.5.0.jar:/opt/jboss/keycloak/standalone/deployments/keycloak-bcrypt-1.5.0.jar
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
@@ -26,3 +27,10 @@ services:
       - 127.0.0.1:9080:9080
       - 127.0.0.1:9443:9443
       - 127.0.0.1:10990:10990
+  #The following is for development ONLY
+  #Be sure to disable maildev for production and also change smtp server settings in realm json file
+  maildev:
+    image: djfarrelly/maildev
+    ports:
+      - 1025:25
+      - 1080:80

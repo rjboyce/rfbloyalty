@@ -1,0 +1,26 @@
+{
+  "rfbloyaltyApp": {
+    "rfbEventAttendance": {
+      "home": {
+        "title": "Rfb Event Attendances",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Rfb Event Attendance",
+        "createOrEditLabel": "Create or edit a Rfb Event Attendance",
+        "notFound": "No Rfb Event Attendances found"
+      },
+      "created": "A new Rfb Event Attendance is created with identifier {{ param }}",
+      "updated": "A Rfb Event Attendance is updated with identifier {{ param }}",
+      "deleted": "A Rfb Event Attendance is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rfb Event Attendance {{ id }}?"
+      },
+      "detail": {
+        "title": "Rfb Event Attendance"
+      },
+      "id": "ID",
+      "attendanceDate": "Attendance Date",
+      "rfbEvent": "Rfb Event",
+      "applicationUser": "Application User"
+    }
+  }
+}

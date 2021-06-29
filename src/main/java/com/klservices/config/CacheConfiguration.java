@@ -48,6 +48,13 @@ public class CacheConfiguration {
             createCache(cm, com.klservices.domain.User.class.getName());
             createCache(cm, com.klservices.domain.Authority.class.getName());
             createCache(cm, com.klservices.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.klservices.domain.RfbLocation.class.getName());
+            createCache(cm, com.klservices.domain.RfbLocation.class.getName() + ".rfbEvents");
+            createCache(cm, com.klservices.domain.RfbEvent.class.getName());
+            createCache(cm, com.klservices.domain.RfbEvent.class.getName() + ".rfbEventAttendances");
+            createCache(cm, com.klservices.domain.RfbEventAttendance.class.getName());
+            createCache(cm, com.klservices.domain.ApplicationUser.class.getName());
+            createCache(cm, com.klservices.domain.ApplicationUser.class.getName() + ".rfbEventAttendances");
             // jhipster-needle-ehcache-add-entry
         };
     }

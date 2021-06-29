@@ -1,8 +1,10 @@
 package com.klservices.service;
 
 import com.klservices.config.Constants;
+import com.klservices.domain.ApplicationUser;
 import com.klservices.domain.Authority;
 import com.klservices.domain.User;
+import com.klservices.repository.ApplicationUserRepository;
 import com.klservices.repository.AuthorityRepository;
 import com.klservices.repository.UserRepository;
 import com.klservices.security.SecurityUtils;
@@ -38,11 +40,25 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    private final ApplicationUserService applicationUserService;
+
+    private final ApplicationUserRepository applicationUserRepository;
+
+    public UserService(
+        UserRepository userRepository,
+        AuthorityRepository authorityRepository,
+        CacheManager cacheManager,
+        ApplicationUserService applicationUserService,
+        ApplicationUserRepository applicationUserRepository
+    ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.applicationUserService = applicationUserService;
+        this.applicationUserRepository = applicationUserRepository;
     }
+
+    //TODO:  Need to implement a synchronization that also supports the extension to User, ApplicationUser
 
     /**
      * Update basic information (first name, last name, email, language) for the current user.
@@ -126,7 +142,11 @@ public class UserService {
             }
         } else {
             log.debug("Saving user '{}' in local database", user.getLogin());
-            userRepository.save(user);
+            System.out.println("USER HAS AUTHORITIES: " + user.getAuthorities().toString());
+            //change here - save to BOTH User and ApplicationUser
+            applicationUserRepository.save(applicationUserService.convertUser(user));
+
+            //userRepository.save(user);
             this.clearUserCaches(user);
         }
         return user;

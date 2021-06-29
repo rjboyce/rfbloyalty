@@ -40,6 +40,8 @@
     "packageFolder": "com/klservices",
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
-    "languages": ["en"]
+    "languages": ["en"],
+    "entities": ["RfbLocation", "RfbEvent", "RfbEventAttendance", "ApplicationUser"],
+    "lastLiquibaseTimestamp": 1622471389000
   }
 }

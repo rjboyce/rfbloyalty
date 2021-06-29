@@ -2,8 +2,10 @@ package com.klservices.web.rest;
 
 import com.klservices.config.Constants;
 import com.klservices.security.AuthoritiesConstants;
+import com.klservices.service.KeycloakServices;
 import com.klservices.service.UserService;
 import com.klservices.service.dto.AdminUserDTO;
+import java.security.Principal;
 import java.util.*;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
@@ -56,8 +58,11 @@ public class UserResource {
 
     private final UserService userService;
 
-    public UserResource(UserService userService) {
+    private final KeycloakServices keycloakServices;
+
+    public UserResource(UserService userService, KeycloakServices keycloakServices) {
         this.userService = userService;
+        this.keycloakServices = keycloakServices;
     }
 
     /**
@@ -87,5 +92,21 @@ public class UserResource {
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+    }
+
+    //Password change implementation, decode in service code of Keycloak/Okta
+    @PutMapping("/users/{login}/crd-update")
+    public ResponseEntity<Void> changeUserPassword(@PathVariable String login, @RequestBody String password, Principal principal) {
+        /*if (principal instanceof AbstractAuthenticationToken) {
+            AbstractAuthenticationToken token = (AbstractAuthenticationToken) principal;
+            if (token == id || principal.)
+        }*/
+
+        keycloakServices.updatePassword(password);
+
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, "applicationUser", login))
+            .build();
     }
 }

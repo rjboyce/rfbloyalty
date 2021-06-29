@@ -1,0 +1,33 @@
+{
+  "name": "RfbEventAttendance",
+  "fields": [
+    {
+      "fieldName": "attendanceDate",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "rfbEvent",
+      "otherEntityRelationshipName": "rfbEventAttendance",
+      "relationshipName": "rfbEvent"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "applicationUser",
+      "otherEntityRelationshipName": "rfbEventAttendance",
+      "relationshipName": "applicationUser"
+    }
+  ],
+  "entityTableName": "rfb_event_attendance",
+  "dto": "mapstruct",
+  "pagination": "infinite-scroll",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210531142948"
+}

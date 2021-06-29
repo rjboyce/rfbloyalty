@@ -1,0 +1,27 @@
+{
+  "rfbloyaltyApp": {
+    "rfbEvent": {
+      "home": {
+        "title": "Rfb Events",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Rfb Event",
+        "createOrEditLabel": "Create or edit a Rfb Event",
+        "notFound": "No Rfb Events found"
+      },
+      "created": "A new Rfb Event is created with identifier {{ param }}",
+      "updated": "A Rfb Event is updated with identifier {{ param }}",
+      "deleted": "A Rfb Event is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rfb Event {{ id }}?"
+      },
+      "detail": {
+        "title": "Rfb Event"
+      },
+      "id": "ID",
+      "eventDate": "Event Date",
+      "eventCode": "Event Code",
+      "rfbEventAttendance": "Rfb Event Attendance",
+      "rfbLocation": "Rfb Location"
+    }
+  }
+}
