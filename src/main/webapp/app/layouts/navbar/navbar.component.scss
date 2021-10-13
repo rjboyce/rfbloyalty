@@ -1,0 +1,63 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+/* ==========================================================================
+Navbar
+========================================================================== */
+
+.navbar {
+  padding: 0.2rem 1rem;
+
+  ul.navbar-nav {
+    .nav-item {
+      margin-left: 0.5em;
+    }
+  }
+
+  a.nav-link {
+    font-weight: 400;
+  }
+}
+
+.dropdown-menu a {
+  color: steelblue !important;
+}
+
+.dropdown-menu a:hover {
+  background-color: black !important;
+  color: white !important;
+}
+
+.dropdown-menu a.active {
+  background-color: #b3d4fc !important;
+}
+
+.navbar-customclass {
+  background-color: white;
+}
+/* changing brand text color*/
+.navbar-customclass .navbar-brand,
+.navbar-customclass .navbar-text {
+  color: steelblue;
+}
+/* navigation link text color */
+.navbar-customclass .navbar-nav .nav-link {
+  color: steelblue;
+}
+/* navigation links anchor hover and active styles */
+.navbar-customclass .nav-item.active .nav-link,
+.navbar-customclass .nav-item:hover .nav-link {
+  color: steelblue;
+}
+
+/* ==========================================================================
+Logo styles
+========================================================================== */
+.logo-img {
+  height: 40px;
+  width: 100px;
+  display: inline-block;
+  vertical-align: middle;
+  background: url('../../../content/images/vkind-logo.png') no-repeat center center;
+  background-size: contain;
+}

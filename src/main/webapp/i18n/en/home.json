@@ -1,0 +1,11 @@
+{
+  "home": {
+    "title": "Volunteer Kind",
+    "header": "Welcome to Volunteer Kind{{firstname}}!",
+    "plainheader": "Welcome to Volunteer Kind!",
+    "subtitle": "This is your homepage",
+    "logged": {
+      "message": "You are logged in as user \"{{username}}\"."
+    }
+  }
+}

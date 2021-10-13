@@ -1,0 +1,41 @@
+entity Location {
+	locationName String
+}
+
+entity Event {
+	eventDate LocalDate,
+	eventName String,
+	startTime String,
+	venue String,
+	projection Integer
+}
+
+entity EventAttendance {
+	attendanceDate LocalDate
+	signIn LocalDate,
+	signOut LocalDate,
+	userCode String
+}
+
+entity Volunteer {
+    id String,
+    phoneNumber String,
+    availability String
+}
+
+relationship OneToMany {
+	Location{event} to Event,
+	Event{eventAttendance} to EventAttendance,
+	Volunteer{eventAttendance} to EventAttendance
+}
+
+relationship OneToOne {
+	Volunteer{homeLocation} to Location
+}
+
+dto * with mapstruct
+
+service all with serviceImpl
+
+paginate Location, Event, Volunteer with pagination
+paginate EventAttendance with infinite-scroll

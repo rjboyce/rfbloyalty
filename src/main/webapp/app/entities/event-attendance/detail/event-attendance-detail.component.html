@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="eventAttendance">
+      <h2 data-cy="appEventAttendanceDetailsHeading">
+        <span jhiTranslate="volunteerKindApp.eventAttendance.detail.title">Event Attendance</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ eventAttendance.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.eventAttendance.userCode">User Code</span></dt>
+        <dd>
+          <span>{{ eventAttendance.userCode }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.eventAttendance.signIn">Sign In Time</span></dt>
+        <dd>
+          <span>{{ eventAttendance.signIn }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.eventAttendance.signOut">Sign Out Time</span></dt>
+        <dd>
+          <span>{{ eventAttendance.signOut }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.eventAttendance.event">Event</span></dt>
+        <dd>
+          <div *ngIf="eventAttendance.eventId">
+            <a [routerLink]="['/event', eventAttendance?.eventId, 'view']">{{ eventAttendance?.eventId }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.eventAttendance.volunteer">Volunteer</span></dt>
+        <dd>
+          <div *ngIf="eventAttendance.volunteerId">
+            <a [routerLink]="['/application-user', eventAttendance?.volunteerId, 'view']">{{ this.data }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/event-attendance', eventAttendance.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

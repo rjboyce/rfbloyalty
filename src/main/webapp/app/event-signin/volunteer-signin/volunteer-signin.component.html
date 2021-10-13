@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate [formGroup]="editForm">
+      <h2>Volunteer Sign In/Out</h2>
+
+      <div>
+        <label class="form-control-label">Please Enter Your Full Code, Omitting Hyphens</label>
+
+        <div class="form-group">
+          <label class="form-control-label">Enter your 9 digit code:</label><br />
+          <span>
+            <input
+              type="text"
+              class="form-control"
+              style="width: 55px; display: inline"
+              name="codeOne"
+              id="field_codeOne"
+              formControlName="codeOne"
+              autocomplete="off"
+              [minlength]="3"
+              [maxLength]="3"
+            />&nbsp;-
+            <input
+              type="text"
+              class="form-control"
+              style="width: 55px; display: inline"
+              name="codeTwo"
+              id="field_codeTwo"
+              formControlName="codeTwo"
+              autocomplete="off"
+              [minlength]="3"
+              [maxLength]="3"
+            />&nbsp;-
+            <input
+              type="text"
+              class="form-control"
+              style="width: 55px; display: inline"
+              name="codeThree"
+              id="field_codeThree"
+              formControlName="codeThree"
+              autocomplete="off"
+              [minlength]="3"
+              [maxLength]="3"
+            />
+          </span>
+        </div>
+
+        <button type="button" id="sign" (click)="validate()" [disabled]="editForm.invalid" class="btn btn-primary">
+          <fa-icon icon="sign-in-alt"></fa-icon>&nbsp;<span>Sign In/Out</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

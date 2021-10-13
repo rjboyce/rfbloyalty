@@ -1,0 +1,71 @@
+<div>
+  <h2 class="font-weight-bold" id="page-heading" data-cy="LocationHeading">
+    <span>Registered/Completed Events</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.location.home.refreshListLabel">Refresh List</span>
+      </button>
+    </div>
+  </h2>
+
+  <!--<jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>-->
+
+  <div class="alert alert-warning" id="no-result" *ngIf="attendances?.length === 0">
+    <span>You Have No Registered or Completed Events</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="attendances && attendances.length > 0">
+    <table class="table table-striped bg-white" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="event.id">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.event">Event</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="userCode">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.userCode">User Code</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="signIn">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.signIn">Sign In Time</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="signOut">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.signOut">Sign Out Time</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let eventAttendance of attendances">
+          <td>
+            <div *ngIf="eventAttendance.eventId">
+              <a [routerLink]="['/event', eventAttendance.eventId, 'view']">{{ returnEventName(eventAttendance) }}</a>
+            </div>
+          </td>
+          <td>{{ eventAttendance.userCode }}</td>
+          <td>{{ eventAttendance.signIn }}</td>
+          <td>{{ eventAttendance.signOut }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="attendances && attendances.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

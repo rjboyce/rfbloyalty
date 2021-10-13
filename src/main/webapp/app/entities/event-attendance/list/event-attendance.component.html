@@ -1,0 +1,104 @@
+<div>
+  <h2 class="font-weight-bold" id="page-heading" data-cy="appEventAttendanceHeading">
+    <span jhiTranslate="volunteerKindApp.eventAttendance.home.title">Event Attendances</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.eventAttendance.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-app-event-attendance"
+        [routerLink]="['/event-attendance/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.eventAttendance.home.createLabel"> Create a new Event Attendance </span>
+      </button>
+    </div>
+  </h2>
+
+  <!--<jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>-->
+
+  <div class="alert alert-warning" id="no-result" *ngIf="eventAttendances?.length === 0">
+    <span jhiTranslate="volunteerKindApp.eventAttendance.home.notFound">No eventAttendances found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="eventAttendances && eventAttendances.length > 0">
+    <table class="table table-striped bg-white" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="userCode">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.userCode">User Code</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="signIn">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.signIn">Sign In Time</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="signOut">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.signOut">Sign Out Time</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="event.id">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.event">Event</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="volunteer.id">
+            <span jhiTranslate="volunteerKindApp.eventAttendance.volunteer">Volunteer</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <tr *ngFor="let eventAttendance of eventAttendances; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/event-attendance', eventAttendance.id, 'view']">{{ eventAttendance.id }}</a>
+          </td>
+          <td>{{ eventAttendance.userCode }}</td>
+          <td>{{ eventAttendance.signIn }}</td>
+          <td>{{ eventAttendance.signOut }}</td>
+          <td>
+            <div *ngIf="eventAttendance.eventId">
+              <a [routerLink]="['/event', eventAttendance?.eventId, 'view']">{{ returnEventName(eventAttendance) }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="eventAttendance.volunteerId">
+              <a [routerLink]="['/application-user', eventAttendance?.volunteerId, 'view']">{{ returnVolunteerName(eventAttendance) }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/event-attendance', eventAttendance.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/event-attendance', eventAttendance.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(eventAttendance)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

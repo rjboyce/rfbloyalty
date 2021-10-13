@@ -1,0 +1,141 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-event-attendance-heading"
+        data-cy="EventAttendanceCreateUpdateHeading"
+        jhiTranslate="volunteerKindApp.eventAttendance.home.createOrEditLabel"
+      >
+        Create or edit an Event Attendance
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.eventAttendance.userCode" for="field_userCode">User Code</label>
+          <input id="field_userCode" type="text" name="userCode" class="form-control" formControlName="userCode" [readonly]="true" />
+          <!-- TODO: ngModel is deprecated in this context, need to find replacement (bind 'value' via directive declaration?)  -->
+        </div>
+        <div class="pb-2">
+          <button
+            type="button"
+            id="generate-code"
+            (click)="generateCode()"
+            [disabled]="this.volunteerCount === this.currentEvent?.projection || eventInvalid.value"
+            class="btn btn-primary"
+          >
+            <span jhiTranslate="entity.action.generate">Generate Code</span>
+          </button>
+          <label class="form-control-label font-weight-bold pl-2" *ngIf="this.currentEvent?.projection !== undefined">
+            {{ this.volunteerCount }} of {{ this.currentEvent?.projection }} volunteers have been approved
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.eventAttendance.event" for="field_event">Event</label>
+          <div class="alert alert-danger" *ngIf="eventInvalid.value === true">
+            Please Provide a Valid Event from the List of Suggestions (Start Typing an Event)
+          </div>
+          <input
+            list="eventsearch"
+            type="text"
+            class="form-control"
+            id="field_event"
+            data-cy="event"
+            name="event"
+            formControlName="event"
+            (keyup)="this.searchEvents($event)"
+            placeholder="Must Select an Event"
+            autocomplete="off"
+          /><!-- onclick="this.document.getElementById('id').focus()" -->
+          <datalist id="eventsearch">
+            <option
+              *ngFor="let event of this.events"
+              value="{{ event.eventName }}"
+              data-value="{{ event.eventName }}"
+              data-id="{{ event.id }}"
+            >
+              {{ getLocationName(event.locationId) }}
+            </option>
+          </datalist>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.eventAttendance.signIn" for="field_signIn">Sign In Time</label>
+          <input
+            id="field_signIn"
+            data-cy="signIn"
+            type="text"
+            class="form-control"
+            name="signIn"
+            formControlName="signIn"
+            [ngxTimepicker]="signin"
+          />
+          <ngx-material-timepicker #signin></ngx-material-timepicker>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.eventAttendance.signOut" for="field_signOut"
+            >Sign Out Time</label
+          >
+          <input
+            id="field_signOut"
+            data-cy="signOut"
+            type="text"
+            class="form-control"
+            name="signOut"
+            formControlName="signOut"
+            [ngxTimepicker]="signout"
+          />
+          <ngx-material-timepicker #signout></ngx-material-timepicker>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.eventAttendance.volunteer" for="field_volunteer"
+            >Application User</label
+          >
+          <div class="alert alert-danger" *ngIf="userInvalid.value">
+            Please Provide a Valid Login from the List of Suggestions (Start Typing a Login)
+          </div>
+          <input
+            list="usersearch"
+            type="text"
+            class="form-control"
+            id="field_volunteer"
+            data-cy="volunteer"
+            name="volunteer"
+            formControlName="volunteer"
+            (keyup)="this.searchUsers($event)"
+            placeholder="Must Select a Login"
+            autocomplete="off"
+          />
+          <datalist id="usersearch">
+            <option *ngFor="let user of this.users">{{ user.login }}</option>
+          </datalist>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving || userInvalid.value || eventInvalid.value"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

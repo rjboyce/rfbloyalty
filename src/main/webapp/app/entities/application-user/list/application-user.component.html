@@ -1,0 +1,101 @@
+<div>
+  <h2 class="font-weight-bold" id="page-heading" data-cy="ApplicationUserHeading">
+    <span jhiTranslate="volunteerKindApp.applicationUser.home.title">Application Users</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.applicationUser.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-application-user"
+        [routerLink]="['/application-user/adminnew']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.applicationUser.home.createLabel"> Create a new Application User </span>
+      </button>
+    </div>
+  </h2>
+
+  <!--<jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>-->
+
+  <div class="alert alert-warning" id="no-result" *ngIf="applicationUsers?.length === 0">
+    <span jhiTranslate="volunteerKindApp.applicationUser.home.notFound">No applicationUsers found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="applicationUsers && applicationUsers.length > 0">
+    <table class="table table-striped bg-white" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.login">Login</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.firstName">First Name</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.lastName">Last Name</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.email">Email</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.activated">Status</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.langKey">Language</span></th>
+          <th scope="col"><span jhiTranslate="volunteerKindApp.applicationUser.homeLocation">Home Location</span></th>
+          <th scope="col">
+            <span jhiTranslate="volunteerKindApp.applicationUser.authorities">Authorities</span>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let applicationUser of applicationUsers; trackBy: trackId" data-cy="entityTable">
+          <td>{{ applicationUser.imageUrl }}</td>
+          <td>
+            <a [routerLink]="['/application-user', applicationUser.id, 'view']">{{ applicationUser.login }}</a>
+          </td>
+          <td>{{ applicationUser.firstName }}</td>
+          <td>{{ applicationUser.lastName }}</td>
+          <td>{{ applicationUser.email }}</td>
+          <td>
+            <span class="badge {{ getActivatedLabel(applicationUser) }}">{{ getStatus(applicationUser) }}</span>
+          </td>
+          <td>{{ applicationUser.langKey }}</td>
+          <td>
+            <div *ngIf="applicationUser.homeLocationId">
+              <a [routerLink]="['/location', applicationUser?.homeLocationId, 'view']">{{ returnName(applicationUser) }}</a>
+            </div>
+            <div *ngIf="!applicationUser.homeLocationId">No Location</div>
+          </td>
+          <td>{{ getAuthorities(applicationUser) }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/application-user', applicationUser.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/application-user', applicationUser.id, 'adminedit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(applicationUser)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

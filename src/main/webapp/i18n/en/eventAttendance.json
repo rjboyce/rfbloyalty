@@ -1,0 +1,30 @@
+{
+  "volunteerKindApp": {
+    "eventAttendance": {
+      "home": {
+        "title": "Event Attendances",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Event Attendance",
+        "createOrEditLabel": "Create or edit an Event Attendance",
+        "notFound": "No Event Attendances found"
+      },
+      "created": "A new Event Attendance is created with identifier {{ param }}",
+      "updated": "A Event Attendance is updated with identifier {{ param }}",
+      "deleted": "A Event Attendance is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Event Attendance {{ id }}?"
+      },
+      "detail": {
+        "title": "Event Attendance"
+      },
+      "id": "ID",
+      "userCode": "User Code",
+      "event": "Event",
+      "applicationUser": "Application User",
+      "signIn": "Sign In",
+      "signOut": "Sign Out",
+      "approved": "Approved",
+      "volunteer": "Volunteer"
+    }
+  }
+}

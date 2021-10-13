@@ -1,0 +1,85 @@
+{
+  "realm": "master",
+  "users": [
+    {
+      "id": "8cb761b7-b27a-4564-8189-0743418eb55a",
+      "createdTimestamp": 1631551614237,
+      "username": "admin",
+      "firstName": "Master",
+      "lastName": "Administrator",
+      "email": "response@vkind.site",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "id": "03ad4407-3192-46a2-82b8-7475fcfa6c7a",
+          "type": "password",
+          "createdDate": 1631551614237,
+          "secretData": "{\"value\":\"oUV/09JB2r46RZTAQ192AQB0/ry4nP5bTfzeplzfx8UO49UiLtjLuMiZoMfnnFaAgj5UtukGHFeBfhuMJUh+jQ==\",\"salt\":\"DGB7XEtZzqzV0DAAm66ADg==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":100000,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["ROLE_ADMIN", "offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["manage-account", "view-profile"]
+      },
+      "notBefore": 0,
+      "groups": ["/Admins"]
+    },
+    {
+      "id": "cf95b47f-3573-4ac4-b1ea-1631da81e5fd",
+      "createdTimestamp": 1623853242076,
+      "username": "greywind",
+      "firstName": "Akshay",
+      "lastName": "Bay",
+      "email": "blacksoul4202@gmail.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "greywind"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["manage-account", "view-profile"]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "4f93de1a-b3e5-4921-9545-a1cb8b3e809b",
+      "createdTimestamp": 1623853242076,
+      "username": "tysidius",
+      "firstName": "Tysidius",
+      "lastName": "Tywin",
+      "email": "rjboyce.data42@gmail.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "tysidius"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["manage-account", "view-profile"]
+      },
+      "notBefore": 0,
+      "groups": []
+    }
+  ]
+}

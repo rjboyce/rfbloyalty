@@ -1,0 +1,114 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-event-heading" data-cy="EventCreateUpdateHeading" jhiTranslate="volunteerKindApp.event.home.createOrEditLabel">
+        Create or edit an Event
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+        <label class="form-control-label">Please Provide the Required Fields *</label>
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.eventName" for="field_eventName">* Event Name</label>
+          <input type="text" class="form-control" name="eventName" id="field_eventName" data-cy="eventName" formControlName="eventName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.eventDate" for="field_eventDate">* Event Date</label>
+          <div class="input-group">
+            <input
+              id="field_eventDate"
+              data-cy="eventDate"
+              class="form-control"
+              name="eventDate"
+              ngbDatepicker
+              #eventDateDp="ngbDatepicker"
+              formControlName="eventDate"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="eventDateDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.startTime" for="field_startTime">* Start Time</label>
+          <div class="input-group">
+            <input
+              id="field_startTime"
+              data-cy="startTime"
+              type="text"
+              class="form-control"
+              name="startTime"
+              [ngxTimepicker]="timepicker"
+              formControlName="startTime"
+            />
+            <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.venue" for="field_venue">* Venue</label>
+          <input type="text" class="form-control" name="venue" id="field_venue" data-cy="venue" formControlName="venue" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.projection" for="field_projection">* Projection</label>
+          <input
+            type="text"
+            class="form-control"
+            name="projection"
+            id="field_projection"
+            data-cy="projection"
+            formControlName="projection"
+          />
+        </div>
+
+        <div class="searchbar">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.event.location" for="field_homeLocation">* Location</label>
+          <div class="alert alert-danger" *ngIf="locInvalid.value">
+            Please Provide a Valid Location from the List of Suggestions (Start Typing a Desired Location)
+          </div>
+          <input
+            list="locationsearch"
+            type="text"
+            class="form-control"
+            id="field_homeLocation"
+            data-cy="homeLocation"
+            name="homeLocation"
+            formControlName="homeLocation"
+            (keyup)="this.searchLocations($event)"
+            placeholder="Must Select a Location"
+            autocomplete="off"
+          />
+          <datalist id="locationsearch">
+            <option *ngFor="let location of this.locations">{{ location.locationName }}</option>
+          </datalist>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving || locInvalid.value"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

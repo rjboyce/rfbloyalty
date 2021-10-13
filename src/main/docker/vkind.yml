@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  volunteerkind-app:
+    image: rjboyce40/volunteerkind
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs,no-liquibase
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://k36w0vj9puxjph3u:y3pzwg2cdt1ww0uc@phtfaw4p6a970uc0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/q45sgs3d6ax7ft2n?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://passus.website/auth/realms/master
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=web_app
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=web_app
+      # The following port setting is needed to allow changes via docker compose (currently disabled in application-dev.yml)
+      - SERVER_PORT=8080
+      # The following two settings ensure that outgoing requests preserve the ssl context or else "http://" is used
+      - SERVER_FORWARDHEADERSSTRATEGY=framework
+      - SERVER_TOMCAT_REDIRECTCONTEXTROOT=false
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 8080:8080

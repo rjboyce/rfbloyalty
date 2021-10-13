@@ -1,0 +1,176 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-application-user-heading"
+        data-cy="ApplicationUserCreateUpdateHeading"
+        jhiTranslate="volunteerKindApp.applicationUser.home.createOrEditLabel"
+      >
+        Create or Edit a User
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <!--<div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>-->
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.login" for="field_login">Login</label>
+          <input type="text" class="form-control" name="login" id="field_login" data-cy="login" formControlName="login" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.firstName" for="field_firstName"
+            >First Name</label
+          >
+          <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.lastName" for="field_lastName">Last Name</label>
+          <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.email" for="field_email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.phoneNumber" for="field_phoneNumber"
+            >Phone</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="phoneNumber"
+            id="field_phoneNumber"
+            data-cy="phoneNumber"
+            formControlName="phoneNumber"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.langKey" for="field_langKey">Lang Key</label>
+          <input
+            type="text"
+            class="form-control"
+            name="langKey"
+            id="field_langKey"
+            data-cy="langKey"
+            formControlName="langKey"
+            placeholder="en"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.imageUrl" for="field_imageUrl">Image Url</label>
+          <input type="text" class="form-control" name="imageUrl" id="field_imageUrl" data-cy="imageUrl" formControlName="imageUrl" />
+        </div>
+
+        <div class="searchbar">
+          <label class="form-control-label" jhiTranslate="volunteerKindApp.applicationUser.homeLocation" for="field_homeLocation"
+            >Home Location</label
+          >
+          <div class="alert alert-danger" *ngIf="locInvalid.value">
+            Please Provide a Valid Location from the List of Suggestions (Start Typing a Desired Location)
+          </div>
+          <input
+            list="locationsearch"
+            type="text"
+            class="form-control"
+            id="field_homeLocation"
+            data-cy="homeLocation"
+            name="homeLocation"
+            formControlName="homeLocation"
+            (keyup)="this.searchLocations($event)"
+            placeholder="Must Select a Location"
+            autocomplete="off"
+          />
+          <datalist id="locationsearch">
+            <option *ngFor="let location of this.locations">{{ location.locationName }}</option>
+          </datalist>
+        </div>
+
+        <label class="pt-5">Availability</label>
+        <div>
+          <table class="table">
+            <tr>
+              <td *ngFor="let day of checkedAvailabilities">
+                <span class="ml-3">
+                  <input
+                    type="checkbox"
+                    name="{{ day.name }}"
+                    id="{{ day.name }}"
+                    class="form-check-input"
+                    (change)="onDayChange($event, day)"
+                    [checked]="day.checked"
+                  />
+                </span>
+                <span
+                  ><label class="form-control-label">{{ day.name }}</label></span
+                >
+              </td>
+            </tr>
+          </table>
+        </div>
+        <label class="form-control-label">Roles</label>
+        <div>
+          <table class="table">
+            <tr>
+              <td *ngFor="let role of roles">
+                <span class="ml-3">
+                  <input
+                    type="checkbox"
+                    name="{{ role.name }}"
+                    id="{{ role.name }}"
+                    class="form-check-input"
+                    (change)="onAuthChange($event, role)"
+                    [checked]="role.checked"
+                  />
+                </span>
+                <span
+                  ><label class="form-control-label">{{ role.name }}</label></span
+                >
+              </td>
+            </tr>
+          </table>
+        </div>
+        <label class="form-control-label">User Status</label>
+        <hr class="mt-0 pt-0" />
+        <div class="ml-3 pl-1">
+          &nbsp;
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="field_activated"
+            data-cy="activated"
+            name="activated"
+            formControlName="activated"
+          />
+          <label class="form-control-label" for="field_activated">Activated</label>
+        </div>
+      </div>
+      <br />
+
+      <div class="pt-3">
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving || locInvalid.value"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+{
+  "name": "EventAttendance",
+  "fields": [
+    {
+      "fieldName": "attendanceDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "signIn",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "signOut",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "userCode",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "event",
+      "otherEntityRelationshipName": "eventAttendance",
+      "relationshipName": "event"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "volunteer",
+      "otherEntityRelationshipName": "eventAttendance",
+      "relationshipName": "volunteer"
+    }
+  ],
+  "entityTableName": "event_attendance",
+  "dto": "mapstruct",
+  "pagination": "infinite-scroll",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210820172833"
+}

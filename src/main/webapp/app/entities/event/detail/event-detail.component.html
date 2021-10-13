@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="event">
+      <h2 data-cy="eventDetailsHeading"><span jhiTranslate="volunteerKindApp.event.detail.title">Event</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt *jhiHasAnyAuthority="'ROLE_ADMIN'"><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd *jhiHasAnyAuthority="'ROLE_ADMIN'">
+          <span>{{ event.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.event.eventDate">Event Date</span></dt>
+        <dd>
+          <span>{{ event.eventDate | formatMediumDateWithDay }}</span>
+        </dd>
+        <!-- | 'ddd, DD MMM YYYY' -->
+        <dt><span jhiTranslate="volunteerKindApp.event.startTime">Start Time</span></dt>
+        <dd>
+          <span>{{ event.startTime }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.event.eventName">Event Name</span></dt>
+        <dd>
+          <span>{{ event.eventName }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.event.venue">Venue</span></dt>
+        <dd>
+          <span>{{ event.venue }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.event.projection">Projection</span></dt>
+        <dd>
+          <span>{{ event.projection }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.event.location">Location</span></dt>
+        <dd>
+          <div>
+            {{ this.data }}
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="button" [routerLink]="['/event', event.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

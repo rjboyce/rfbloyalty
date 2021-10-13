@@ -1,0 +1,85 @@
+<div>
+  <h2 class="font-weight-bold" id="page-heading" data-cy="LocationHeading">
+    <span>Suggested Upcoming Events</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="volunteerKindApp.location.home.refreshListLabel">Refresh List</span>
+      </button>
+    </div>
+  </h2>
+
+  <!-- <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>-->
+
+  <div class="alert alert-warning" id="no-result" *ngIf="events?.length === 0">
+    <span>No Available Events</span>
+  </div>
+
+  <div *ngIf="this.user?.homeLocationId">
+    <label class="font-weight-bold">For Location: {{ this.locName }}</label>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="events && events.length > 0">
+    <table class="table table-striped bg-white" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="event_date">
+            <span jhiTranslate="volunteerKindApp.event.eventDate">Date</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="event_name">
+            <span jhiTranslate="volunteerKindApp.event.eventName">Event Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="venue">
+            <span jhiTranslate="volunteerKindApp.event.venue">Venue</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+
+          <th scope="col" jhiSortBy="start_time">
+            <span jhiTranslate="volunteerKindApp.event.startTime">Start Time</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="projection">
+            <span jhiTranslate="volunteerKindApp.event.projection">Projection</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>{{ event.eventDate | formatMediumDateWithDay }}</td>
+          <td>{{ event.eventName }}</td>
+          <td>{{ event.venue }}</td>
+          <td>{{ event.startTime }}</td>
+          <td>{{ event.projection }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button (click)="saveAttendance(event)" type="button" class="btn btn-info btn-sm">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Sign Up</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="events && events.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

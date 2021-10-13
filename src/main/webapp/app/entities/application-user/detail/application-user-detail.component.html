@@ -1,0 +1,64 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="applicationUser">
+      <h2 data-cy="applicationUserDetailsHeading">
+        <span jhiTranslate="volunteerKindApp.applicationUser.detail.title">Application User</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ applicationUser.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.login">Login</span></dt>
+        <dd>
+          <span>{{ applicationUser.login }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.firstName">First Name</span></dt>
+        <dd>
+          <span>{{ applicationUser.firstName }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.lastName">Last Name</span></dt>
+        <dd>
+          <span>{{ applicationUser.lastName }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.email">Email</span></dt>
+        <dd>
+          <span>{{ applicationUser.email }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.phoneNumber">Phone</span></dt>
+        <dd>
+          <span>{{ applicationUser.phoneNumber }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.langKey">Lang Key</span></dt>
+        <dd>
+          <span>{{ applicationUser.langKey }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.imageUrl">Image Url</span></dt>
+        <dd>
+          <span>{{ applicationUser.imageUrl }}</span>
+        </dd>
+        <dt><span jhiTranslate="volunteerKindApp.applicationUser.homeLocation">Home Location</span></dt>
+        <dd>
+          <div>
+            <a [routerLink]="['/location', applicationUser?.homeLocationId, 'view']">{{ this.data }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/application-user', applicationUser.id, 'adminedit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
