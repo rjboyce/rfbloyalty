@@ -25,7 +25,7 @@ but with many changes and upgrades to support current technologies and to meet t
 
 You may fork this repository and run on your local machine or check out my demo [https://www.vkind.site](https://www.vkind.site).
 
-`Running this Application locally requires Node.js (latest LTS), JDK 11 and Maven`
+`Running this Application locally requires Node.js (latest LTS) and the most recent JDK 11`
 
 To run the application, execute the following (dependent services are on public servers and thus require an accessible internet connection):
 
