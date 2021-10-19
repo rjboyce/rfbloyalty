@@ -1,5 +1,5 @@
 {
-  "realm": "master",
+  "realm": "vkind",
   "users": [
     {
       "id": "8cb761b7-b27a-4564-8189-0743418eb55a",
@@ -53,7 +53,7 @@
         "account": ["manage-account", "view-profile"]
       },
       "notBefore": 0,
-      "groups": []
+      "groups": ["/AppUsers"]
     },
     {
       "id": "4f93de1a-b3e5-4921-9545-a1cb8b3e809b",
@@ -79,7 +79,7 @@
         "account": ["manage-account", "view-profile"]
       },
       "notBefore": 0,
-      "groups": []
+      "groups": ["/AppUsers"]
     }
   ]
 }

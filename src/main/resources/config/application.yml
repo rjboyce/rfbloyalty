@@ -78,6 +78,10 @@ spring:
         - prod
         - api-docs
         - no-liquibase
+      dev:
+        - dev
+        - api-docs
+        - no-liquibase
         # Uncomment to activate TLS for the dev profile
         #- tls
   jmx:
@@ -104,8 +108,6 @@ spring:
       hibernate.query.fail_on_pagination_over_collection_fetch: true
       hibernate.query.in_clause_parameter_padding: true
     hibernate:
-      #none for using schema.sql/mysql, update or verify for liquibase
-      ddl-auto: none
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -129,18 +131,6 @@ spring:
   output:
     ansi:
       console-available: true
-  security:
-    oauth2:
-      client:
-        provider:
-          oidc:
-            issuer-uri: https://passus.website/auth/realms/master
-            #issuer-uri: http://localhost:9080/auth/realms/master
-        registration:
-          oidc:
-            client-id: web_app
-            client-secret: web_app
-            scope: openid,profile,email
 
 server:
   servlet:

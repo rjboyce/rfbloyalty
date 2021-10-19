@@ -7,7 +7,7 @@
 
     <groupId>com.rjboyce</groupId>
     <artifactId>volunteerkind</artifactId>
-    <version>0.2.5-SNAPSHOT</version>
+    <version>0.2.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Volunteerkind</name>
 
@@ -312,6 +312,13 @@
             <artifactId>keycloak-admin-client</artifactId>
             <version>14.0.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -389,6 +396,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>com.github.ulisesbocchio</groupId>
+                    <artifactId>jasypt-maven-plugin</artifactId>
+                    <version>3.0.4</version>
+                </plugin>
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>

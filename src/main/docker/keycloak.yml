@@ -22,8 +22,10 @@ services:
       - KEYCLOAK_HOSTNAME=passus.website
       - PROXY_ADDRESS_FORWARDING=true
       - KEYCLOAK_HTTPS_PORT=443
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
+      # MUST HARDEN AND HIDE THE FOLLOWING CREDENTIALS FOR THE MASTER REALM (for testing purposes ONLY)
+      - KEYCLOAK_USER=master
+      - KEYCLOAK_PASSWORD=master
+      # TEMPORARY -- to become MySQL access
       - DB_VENDOR=h2
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix

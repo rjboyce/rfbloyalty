@@ -1,6 +1,7 @@
 package com.rjboyce;
 
 import com.rjboyce.config.ApplicationProperties;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;

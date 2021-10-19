@@ -32,16 +32,18 @@ spring:
     livereload:
       enabled: false
   datasource:
-    type:
-      com.zaxxer.hikari.HikariDataSource
-      # Local MySQL Database
-      #url: jdbc:mysql://127.0.0.1:3306/volunteerkind?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-      #username: vkind
-      #password: vkind
-      # Remote Heroku JawsDB MySQL Database
+    type: com.zaxxer.hikari.HikariDataSource
+
+    # Local MySQL Database (testing purposes ONLY)
+    #url: jdbc:mysql://127.0.0.1:3306/volunteerkind?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #username: vkind
+    #password: vkind
+
+    # Remote Heroku JawsDB MySQL Database
     url: jdbc:mysql://phtfaw4p6a970uc0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/q45sgs3d6ax7ft2n?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: k36w0vj9puxjph3u
-    password: y3pzwg2cdt1ww0uc
+    username: ENC(CFt1DV59JhcmY24mi98x48LDZ4al56bIeJAkBXKP/TZdOHPKVUGzTEEHdmX6lM4SDuIthQ5vp8S8xMF767ZPeg==)
+    password: ENC(nqfv81CMSwcA7nSHCu3p9DUjez0pAJVvPFaI+4zrfmJFR4/vQAtbke5Ts+xD9WVTBe9/4QF/f+OmODgRNJ1i2w==)
+
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -78,7 +80,7 @@ spring:
 #
 server:
   #Note: We'll specify our port/ssl settings within docker compose, make sure ssl enabled property is set to true!
-  #port: 8443
+  port: 8080
   #Note: the following two settings ensure that outgoing requests preserve the ssl context or else "http://" is used
   #forward-headers-strategy: framework
   #tomcat:
