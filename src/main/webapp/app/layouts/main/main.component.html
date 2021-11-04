@@ -3,7 +3,7 @@
 </div>
 
 <div class="container-fluid">
-  <div class="card jh-card" style="background-color: whitesmoke">
+  <div [ngClass]="{ 'card jh-card': currentRoute != '/' }" style="background-color: whitesmoke">
     <router-outlet></router-outlet>
   </div>
 

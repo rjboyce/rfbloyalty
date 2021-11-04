@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { errorRoute } from './layouts/error/error.route';
@@ -8,6 +8,7 @@ import { Authority } from 'app/config/authority.constants';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { AboutComponent } from './about/about.component';
+import { MemberComponent } from './member/member.component';
 
 const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
 
@@ -31,6 +32,10 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         {
           path: 'about',
           component: AboutComponent,
+        },
+        {
+          path: 'member',
+          component: MemberComponent,
         },
         {
           path: 'userevents',

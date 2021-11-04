@@ -19,6 +19,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Authority implements Serializable {
 
+    public Authority() {}
+
+    public Authority(String name) {
+        this.name = name;
+    }
+
     private static final long serialVersionUID = 1L;
 
     @NotNull

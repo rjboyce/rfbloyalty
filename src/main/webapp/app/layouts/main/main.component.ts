@@ -12,6 +12,7 @@ import { AccountService } from 'app/core/auth/account.service';
 })
 export class MainComponent implements OnInit {
   private renderer: Renderer2;
+  public currentRoute = '';
 
   constructor(
     private accountService: AccountService,
@@ -29,6 +30,7 @@ export class MainComponent implements OnInit {
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
+        this.currentRoute = this.router.url;
         this.updateTitle();
       }
     });

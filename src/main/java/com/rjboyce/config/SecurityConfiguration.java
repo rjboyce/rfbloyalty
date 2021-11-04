@@ -45,6 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
     private String issuerUri;
 
+    @Value("${host}")
+    private String host;
+
     private final SecurityProblemSupport problemSupport;
 
     public SecurityConfiguration(CorsFilter corsFilter, JHipsterProperties jHipsterProperties, SecurityProblemSupport problemSupport) {
@@ -98,8 +101,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/member").hasAnyAuthority(AuthoritiesConstants.ADMIN,AuthoritiesConstants.USER)
         .and()
             .oauth2Login()
+            .defaultSuccessUrl(host)
         .and()
             .oauth2ResourceServer()
                 .jwt()

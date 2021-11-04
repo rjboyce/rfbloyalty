@@ -1,7 +1,9 @@
 package com.rjboyce.service.impl;
 
+import com.rjboyce.domain.Authority;
 import com.rjboyce.domain.Volunteer;
 import com.rjboyce.service.KeycloakServices;
+import java.util.ArrayList;
 import java.util.Collections;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -69,6 +71,7 @@ public class KeycloakServicesImpl implements KeycloakServices {
             setFields(kcUser, user);
             Response response = realmResource.users().create(kcUser);
             System.out.println("USER CREATED STATUS: " + response.getStatusInfo().toString());
+            response.close();
         } finally {
             System.out.println("VOLUNTEERS: " + realmResource.users().count());
             kc.close();
@@ -114,5 +117,15 @@ public class KeycloakServicesImpl implements KeycloakServices {
         kcUser.setFirstName(user.getFirstName());
         kcUser.setLastName(user.getLastName());
         kcUser.setEnabled(user.isActivated());
+
+        if (kcUser.getGroups() == null) kcUser.setGroups(new ArrayList<>());
+
+        if (user.getAuthorities().contains(new Authority("ROLE_ADMIN"))) {
+            kcUser.getGroups().add("Admins");
+            kcUser.getGroups().remove("AppUsers");
+        } else {
+            kcUser.getGroups().add("AppUsers");
+            kcUser.getGroups().remove("Admins");
+        }
     }
 }
