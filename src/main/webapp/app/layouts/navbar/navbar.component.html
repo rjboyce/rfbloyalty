@@ -39,7 +39,7 @@
         </a>
       </li>
 
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="!validRole(['ROLE_ATTENDEE'])">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngSwitchCase="true">
         <a class="nav-link" [routerLink]="['/', 'member']" (click)="collapseNavbar()">
           <span>
             <span class="fab fa-flag-checkered"></span>

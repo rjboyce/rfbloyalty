@@ -11,8 +11,8 @@ import { AccountService } from 'app/core/auth/account.service';
   templateUrl: './main.component.html',
 })
 export class MainComponent implements OnInit {
-  private renderer: Renderer2;
   public currentRoute = '';
+  private renderer: Renderer2;
 
   constructor(
     private accountService: AccountService,
