@@ -3,9 +3,7 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, from } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { IAppEvent } from '../event.model';
-
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EventService } from '../service/event.service';
 import { EventDeleteDialogComponent } from '../delete/event-delete-dialog.component';

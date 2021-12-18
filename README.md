@@ -19,7 +19,7 @@ but with many changes and upgrades to support current technologies and to meet t
 - User Password Change from Frontend (Upcoming)
 - Functionality to Support Public hosting, Including a Dedicated Volunteer Finder (Upcoming)
 - Volunteer Referral System with Registration Rejection Functionality (Future Improvement)
-- Future Plans to Improve Internationalization and to Include Profile Image Selection (Future Improvement)
+- Future Plans to Improve Internationalization and to Include Profile Image Selection
 
 ```
 

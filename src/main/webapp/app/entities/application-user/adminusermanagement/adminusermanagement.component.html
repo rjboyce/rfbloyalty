@@ -1,5 +1,5 @@
-<div class="row justify-content-center">
-  <div class="col-8">
+<div class="container">
+  <div>
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2
         id="jhi-application-user-heading"
@@ -96,62 +96,56 @@
         </div>
 
         <label class="pt-5">Availability</label>
-        <div>
-          <table class="table">
-            <tr>
-              <td *ngFor="let day of checkedAvailabilities">
-                <span class="ml-3">
-                  <input
-                    type="checkbox"
-                    name="{{ day.name }}"
-                    id="{{ day.name }}"
-                    class="form-check-input"
-                    (change)="onDayChange($event, day)"
-                    [checked]="day.checked"
-                  />
-                </span>
-                <span
-                  ><label class="form-control-label">{{ day.name }}</label></span
-                >
-              </td>
-            </tr>
-          </table>
+        <hr class="mt-0 pt-0" />
+        <div class="check-flow">
+          <div *ngFor="let day of checkedAvailabilities" class="m-wrap">
+            <span class="text-nowrap">
+              <input
+                type="checkbox"
+                name="{{ day.name }}"
+                id="{{ day.name }}"
+                class="form-check-input"
+                (change)="onDayChange($event, day)"
+                [checked]="day.checked"
+              />
+
+              <label class="form-control-label">{{ day.name }}</label>
+            </span>
+          </div>
         </div>
+
         <label class="form-control-label">Roles</label>
-        <div>
-          <table class="table">
-            <tr>
-              <td *ngFor="let role of roles">
-                <span class="ml-3">
-                  <input
-                    type="checkbox"
-                    name="{{ role.name }}"
-                    id="{{ role.name }}"
-                    class="form-check-input"
-                    (change)="onAuthChange($event, role)"
-                    [checked]="role.checked"
-                  />
-                </span>
-                <span
-                  ><label class="form-control-label">{{ role.name }}</label></span
-                >
-              </td>
-            </tr>
-          </table>
+        <hr class="mt-0 pt-0" />
+        <div class="check-flow">
+          <div *ngFor="let role of roles" class="m-wrap">
+            <span class="text-nowrap">
+              <input
+                type="checkbox"
+                name="{{ role.name }}"
+                id="{{ role.name }}"
+                class="form-check-input"
+                (change)="onAuthChange($event, role)"
+                [checked]="role.checked"
+              />
+
+              <label class="form-control-label">{{ role.name }}</label>
+            </span>
+          </div>
         </div>
         <label class="form-control-label">User Status</label>
         <hr class="mt-0 pt-0" />
-        <div class="ml-3 pl-1">
-          &nbsp;
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="field_activated"
-            data-cy="activated"
-            name="activated"
-            formControlName="activated"
-          />
-          <label class="form-control-label" for="field_activated">Activated</label>
+        <div class="m-wrap">
+          <span>
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="field_activated"
+              data-cy="activated"
+              name="activated"
+              formControlName="activated"
+            />
+            <label class="form-control-label" for="field_activated">Activated</label>
+          </span>
         </div>
       </div>
       <br />

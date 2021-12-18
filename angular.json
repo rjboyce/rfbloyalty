@@ -34,7 +34,7 @@
               "src/main/webapp/favicon.ico",
               "src/main/webapp/robots.txt",
               {
-                "glob": "*.{js,css,html,png}",
+                "glob": "*.{js,css,html,png,jpg}",
                 "input": "./node_modules/swagger-ui-dist",
                 "output": "swagger-ui",
                 "ignore": ["**/index.html"]

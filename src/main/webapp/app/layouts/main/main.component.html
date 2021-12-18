@@ -1,11 +1,13 @@
-<div>
+<div style="background: white; border-width: 0 0 1px 0; border-color: #2c5c87; border-style: solid">
   <router-outlet name="navbar"></router-outlet>
 </div>
 
-<div class="container-fluid">
-  <div [ngClass]="{ 'card jh-card': currentRoute != '/' }" style="background-color: whitesmoke">
+<div [ngClass]="{ 'container-fluid': currentRoute != '/' }">
+  <div [ngClass]="{ 'card jh-card': currentRoute != '/' }" style="background-color: whitesmoke; min-height: 85vh">
     <router-outlet></router-outlet>
   </div>
 
-  <jhi-footer></jhi-footer>
+  <div [ngStyle]="{ 'margin-top': currentRoute != '/' ? '5px' : '0' }">
+    <jhi-footer></jhi-footer>
+  </div>
 </div>

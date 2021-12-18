@@ -1,5 +1,5 @@
-<div class="row justify-content-center">
-  <div class="col-8">
+<div class="container">
+  <div>
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2
         id="jhi-application-user-heading"
@@ -89,26 +89,22 @@
       </div>
 
       <label>Availability</label>
-      <div>
-        <table class="table">
-          <tr>
-            <td *ngFor="let day of checkedAvailabilities">
-              <span class="ml-3">
-                <input
-                  type="checkbox"
-                  name="{{ day.name }}"
-                  id="{{ day.name }}"
-                  class="form-check-input"
-                  (change)="onDayChange($event, day)"
-                  [checked]="day.checked"
-                />
-              </span>
-              <span
-                ><label class="form-control-label">{{ day.name }}</label></span
-              >
-            </td>
-          </tr>
-        </table>
+      <hr class="mt-0 pt-0" />
+      <div class="check-flow">
+        <div *ngFor="let day of checkedAvailabilities" class="m-wrap">
+          <span class="text-nowrap">
+            <input
+              type="checkbox"
+              name="{{ day.name }}"
+              id="{{ day.name }}"
+              class="form-check-input"
+              (change)="onDayChange($event, day)"
+              [checked]="day.checked"
+            />
+
+            <label class="form-control-label">{{ day.name }}</label>
+          </span>
+        </div>
       </div>
 
       <div class="pt-3">

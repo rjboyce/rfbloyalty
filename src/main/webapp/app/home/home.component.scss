@@ -1,11 +1,87 @@
 /* ==========================================================================
-Main page styles
+Splash (Home) page styles
 ========================================================================== */
 
-.hipster {
+.tonight {
   display: inline-block;
-  width: 347px;
-  height: 497px;
-  background: url('../../content/images/lifeguard.png') no-repeat center top;
+  width: 300px;
+  height: 200px;
+  background: url('../../content/images/tonight.jpg') no-repeat;
   background-size: contain;
+  border-radius: 50%;
+}
+
+.intro {
+  display: block;
+  width: 300px;
+  height: 200px;
+  background: url('../../content/images/cloudshine.jpg') no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+}
+
+.grbeach {
+  display: inline-block;
+  width: 300px;
+  height: 199px;
+  background: url('../../content/images/groupbeach.jpg') no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+}
+
+.grhands {
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  background: url('../../content/images/grouphands.jpg') no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+}
+
+.volunteers {
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  background: url('../../content/images/volunteersneeded.jpg') no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+}
+
+.rpad {
+  padding-top: 15px;
+  padding-bottom: 10px;
+}
+
+.h-margin {
+  margin: 25px;
+}
+
+.h-font {
+  color: #2c5c87;
+  font-family: 'Helvetica', sans-serif;
+  font-size: 36pt;
+}
+
+.flex-space {
+  justify-content: space-around;
+}
+
+.mobile-margin {
+  margin: 5px;
+}
+
+.description {
+  padding: 5px;
+  color: #2c5c87;
+  font-size: 16pt;
+  font-family: 'Helvetica', sans-serif;
+}
+
+.force-width {
+  width: 70%;
+}
+
+.homeback {
+  background-image: url('../../content/images/backclouds.jpg');
+  padding-bottom: 50px;
 }

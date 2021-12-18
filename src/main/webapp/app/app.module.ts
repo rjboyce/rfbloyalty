@@ -4,7 +4,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import locale from '@angular/common/locales/en';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
 import { NgxWebstorageModule, SessionStorageService } from 'ngx-webstorage';
 import * as dayjs from 'dayjs';
@@ -16,10 +15,10 @@ import { SharedModule } from 'app/shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
 import { EntityRoutingModule } from './entities/entity-routing.module';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { fontAwesomeIcons } from './config/font-awesome-icons';
 import { httpInterceptorProviders } from './core/interceptor';
 import { translatePartialLoader, missingTranslationHandler } from './config/translation.config';
 import { MainComponent } from './layouts/main/main.component';
@@ -30,6 +29,8 @@ import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { AboutComponent } from './about/about.component';
 import { MemberComponent } from './member/member.component';
+import { fontAwesomeIcons } from './config/font-awesome-icons';
+import { faBuilding } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   imports: [
@@ -85,7 +86,7 @@ export class AppModule {
   ) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
     registerLocaleData(locale);
-    iconLibrary.addIcons(...fontAwesomeIcons);
+    iconLibrary.addIcons(...fontAwesomeIcons, faBuilding); // ADD EXCLUDED ICONS HERE -- faBuilding, faUsers are extras on navbar
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
     translateService.setDefaultLang('en');
     // if user have changed language and navigates away from the application and back to the application then use previously choosed language

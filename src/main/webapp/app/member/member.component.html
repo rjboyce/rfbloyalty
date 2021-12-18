@@ -1,36 +1,38 @@
-<div class="row">
-  <div class="col-md-3">
-    <span class="hipster img-fluid rounded"></span>
-  </div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="vkind img-fluid rounded"></span>
+    </div>
 
-  <div class="col-md-9">
-    <div [ngSwitch]="isAuthenticated()">
-      <div *ngSwitchCase="true">
-        <h1 class="display-4" jhiTranslate="home.header" [translateValues]="{ firstname: ', ' + user!.firstName }">
-          Welcome to Volunteer Kind<span *ngIf="user!.firstName">, {{ user!.firstName }}</span
-          >!
-        </h1>
-      </div>
-      <div *ngSwitchCase="false">
-        <h1 class="display-4" jhiTranslate="home.plainheader">Welcome to Volunteer Kind!</h1>
+    <div class="col-md-9">
+      <div [ngSwitch]="isAuthenticated()">
+        <div *ngSwitchCase="true">
+          <h1 class="display-4" jhiTranslate="home.header" [translateValues]="{ firstname: ', ' + user!.firstName }">
+            Welcome to Volunteer Kind<span *ngIf="user!.firstName">, {{ user!.firstName }}</span
+            >!
+          </h1>
+        </div>
+        <div *ngSwitchCase="false">
+          <h1 class="display-4" jhiTranslate="home.plainheader">Welcome to Volunteer Kind!</h1>
+          <br />
+          <p>
+            <span jhiTranslate="global.messages.info.authenticated.prefix">Please register or sign in </span>
+            <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">here</a>
+          </p>
+        </div>
+
         <br />
-        <p>
-          <span jhiTranslate="global.messages.info.authenticated.prefix">Please register or sign in </span>
-          <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">here</a>
-        </p>
-      </div>
 
-      <br />
+        <div *ngIf="validRole(['ROLE_ATTENDEE', 'ROLE_ADMIN'])" routerLinkActive="active">
+          <p>
+            Here are your
+            <a class="alert-link" [routerLink]="['/event-signon', 'showevents']">Events For Today</a>
+          </p>
+        </div>
 
-      <div *ngIf="validRole(['ROLE_ATTENDEE', 'ROLE_ADMIN'])" routerLinkActive="active">
-        <p>
-          Here are your
-          <a class="alert-link" [routerLink]="['/event-signon', 'showevents']">Events For Today</a>
-        </p>
-      </div>
-
-      <div *ngSwitchCase="true">
-        <p>Please keep an eye on your homepage for member news and notices concerning Volunteer Kind Services...</p>
+        <div *ngSwitchCase="true">
+          <p>Please keep an eye on your homepage for member news and notices concerning Volunteer Kind Services...</p>
+        </div>
       </div>
     </div>
   </div>

@@ -16,6 +16,7 @@ import { Valid } from 'app/entities/valid.model';
 @Component({
   selector: 'jhi-application-user-update',
   templateUrl: './application-user-update.component.html',
+  styleUrls: ['./application-user-update.component.scss'],
 })
 export class ApplicationUserUpdateComponent implements OnInit {
   isSaving = false;
