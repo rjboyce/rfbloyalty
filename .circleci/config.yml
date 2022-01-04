@@ -35,21 +35,21 @@ jobs:
           environment:
             SPRING:
               JPA:
-                GENERATE_DDL: TRUE
+                GENERATE_DDL: 'TRUE'
                 HIBERNATE:
-                  DDL_AUTO: CREATE-DROP
-                DATABASE_PLATFORM: tech.jhipster.domain.util.FixedH2Dialect
+                  DDL_AUTO: 'CREATE-DROP'
+                DATABASE_PLATFORM: 'tech.jhipster.domain.util.FixedH2Dialect'
               SQL:
                 INIT:
-                  MODE: NEVER
+                  MODE: 'NEVER'
               SECURITY:
                 OAUTH2:
                   CLIENT:
                     PROVIDER:
                       OIDC:
-                        ISSUER_URI: http://DO_NOT_CALL:9080/auth/realms/jhipster
+                        ISSUER_URI: 'http://DO_NOT_CALL:9080/auth/realms/jhipster'
               DATASOURCE:
-                URL: jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+                URL: 'jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE'
           name: Verify
           command: mvn verify
 
