@@ -33,23 +33,23 @@ jobs:
       # CircleCI needs additional configuration for integration tests (if separate test properties differ than those of the application)
       - run:
           environment:
-            SPRING:
-              JPA:
-                GENERATE_DDL: 'TRUE'
-                HIBERNATE:
-                  DDL_AUTO: 'CREATE-DROP'
-                DATABASE_PLATFORM: 'tech.jhipster.domain.util.FixedH2Dialect'
-              SQL:
-                INIT:
-                  MODE: 'NEVER'
-              SECURITY:
-                OAUTH2:
-                  CLIENT:
-                    PROVIDER:
-                      OIDC:
-                        ISSUER_URI: 'http://DO_NOT_CALL:9080/auth/realms/jhipster'
-              DATASOURCE:
-                URL: 'jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE'
+            spring:
+              jpa:
+                generate-ddl: true
+                hibernate:
+                  ddl-auto: create-drop
+                database-platform: tech.jhipster.domain.util.FixedH2Dialect
+              sql:
+                init:
+                  mode: never
+              security:
+                oauth2:
+                  client:
+                    provider:
+                      oidc:
+                        issuer-uri: http://DO_NOT_CALL:9080/auth/realms/jhipster
+              datasource:
+                url: jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
           name: Verify
           command: mvn verify
 
