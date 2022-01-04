@@ -19,6 +19,9 @@ jobs:
           # PUT SENSITIVE ENVIRONMENT VARIABLES DIRECTLY UNDER CIRCLECI MANAGEMENT!!!
           # e.g. JASYPT_ENCRYPTOR_PASSWORD, SPRING_DATASOURCE_URL, SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI,
           # SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID, SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET
+          environment:
+            - SPRING_DATASOURCE_URL=jdbc:mysql://k36w0vj9puxjph3u:y3pzwg2cdt1ww0uc@phtfaw4p6a970uc0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/q45sgs3d6ax7ft2n?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://passus.website/auth/realms/vkind
 
           name: Build
           command: mvn -B -DskipTests clean package
@@ -33,23 +36,12 @@ jobs:
       # CircleCI needs additional configuration for integration tests (if separate test properties differ than those of the application)
       - run:
           environment:
-            spring:
-              jpa:
-                generate-ddl: true
-                hibernate:
-                  ddl-auto: create-drop
-                database-platform: tech.jhipster.domain.util.FixedH2Dialect
-              sql:
-                init:
-                  mode: never
-              security:
-                oauth2:
-                  client:
-                    provider:
-                      oidc:
-                        issuer-uri: http://DO_NOT_CALL:9080/auth/realms/jhipster
-              datasource:
-                url: jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+            - SPRING_DATASOURCE_URL=jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+            - SPRING_JPA_GENERATE_DDL=TRUE
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=CREATE-DROP
+            - SPRING_SQL_INIT_MODE=NEVER
+            - SPRING_JPA_DATABASE_PLATFORM=tech.jhipster.domain.util.FixedH2Dialect
+            - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=http://DO_NOT_CALL:9080/auth/realms/jhipster
           name: Verify
           command: mvn verify
 
