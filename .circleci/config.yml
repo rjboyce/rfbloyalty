@@ -34,8 +34,10 @@ jobs:
           environment:
             SPRING.JPA.GENERATE_DDL: TRUE
             SPRING.JPA.HIBERNATE.DDL_AUTO: CREATE-DROP
+            SPRING.JPA.DATABASE_PLATFORM: tech.jhipster.domain.util.FixedH2Dialect
             SPRING.SQL.INIT.MODE: NEVER
             SPRING.SECURITY.OAUTH2.CLIENT.PROVIDER.OIDC.ISSUER_URI: http://DO_NOT_CALL:9080/auth/realms/jhipster
+            SPRING.DATASOURCE.TYPE: com.zaxxer.hikari.HikariDataSource
             SPRING.DATASOURCE.URL: jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
           name: Verify
           command: mvn verify
