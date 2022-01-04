@@ -47,7 +47,7 @@ jobs:
             SPRING_JPA_HIBERNATE_NAMING_IMPLICIT_STRATEGY: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
             SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: true
           name: Verify
-          command: mvn verify
+          command: mvn -B clean verify
 
 workflows:
   # Below is the definition of your workflow.
