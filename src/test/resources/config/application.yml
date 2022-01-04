@@ -14,9 +14,6 @@
 # ===================================================================
 
 spring:
-  profiles:
-    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
   application:
     name: volunteerkind
   datasource:
@@ -34,7 +31,7 @@ spring:
     database-platform: tech.jhipster.domain.util.FixedH2Dialect
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -44,11 +41,23 @@ spring:
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-      hibernate.hbm2ddl.auto: validate
+      #hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
       hibernate.query.fail_on_pagination_over_collection_fetch: true
-  #liquibase:
-  #contexts: test
+
+    #!!!IMPORTANT!!!
+    #Need the following along with the 'create-drop' mode setting for hibernate to work (make sure legacy setting hbm2ddl is disabled/not used)
+    #Also make sure any sql scripts are named by profile/database (as H2 is used for testing) e.g data-MySql.sql OR
+    #set 'spring.sql.init.mode' to 'never', otherwise such script files will take precedence
+    generate-ddl: true
+
+    #In Progress(rare use case anyway), issue with liquibase being enabled and handling of jwtDecoder bean
+    #Have hibernate generate database and then use sql scripts
+    #defer-datasource-initialization: true
+
+  liquibase:
+    contexts: test
+
   mail:
     host: localhost
   main:
@@ -75,6 +84,15 @@ spring:
         provider:
           oidc:
             issuer-uri: http://DO_NOT_CALL:9080/auth/realms/jhipster
+  config:
+    activate:
+      on-profile:
+      # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+      #testcontainers
+
+  sql:
+    init:
+      mode: never
 
 server:
   port: 10344

@@ -156,7 +156,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the eventDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/events/{id}")
-    public ResponseEntity<EventDTO> getevent(@PathVariable Long id) {
+    public ResponseEntity<EventDTO> getEvent(@PathVariable Long id) {
         log.debug("REST request to get event : {}", id);
         Optional<EventDTO> eventDTO = eventService.findOne(id);
         return ResponseUtil.wrapOrNotFound(eventDTO);
@@ -169,7 +169,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/events/{id}")
-    public ResponseEntity<Void> deleteevent(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         log.debug("REST request to delete event : {}", id);
         eventService.delete(id);
         return ResponseEntity

@@ -3,7 +3,6 @@ package com.rjboyce.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,7 +12,6 @@ import com.rjboyce.domain.User;
 import com.rjboyce.repository.UserRepository;
 import com.rjboyce.security.AuthoritiesConstants;
 import com.rjboyce.service.dto.AdminUserDTO;
-import com.rjboyce.service.dto.UserDTO;
 import com.rjboyce.service.mapper.UserMapper;
 import java.time.Instant;
 import java.util.*;
@@ -51,6 +49,8 @@ class UserResourceIT {
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
 
     private static final String DEFAULT_LANGKEY = "en";
+
+    private static final String DEFAULT_CREATED_BY = "user";
 
     @Autowired
     private UserRepository userRepository;
@@ -91,22 +91,24 @@ class UserResourceIT {
         user.setLastName(DEFAULT_LASTNAME);
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
+        user.setCreatedBy(DEFAULT_CREATED_BY);
         return user;
     }
 
     /**
      * Setups the database with one user.
      */
-    public static User initTestUser(UserRepository userRepository, EntityManager em) {
+    public static User initTestUser(EntityManager em) {
         User user = createEntity(em);
         user.setLogin(DEFAULT_LOGIN);
         user.setEmail(DEFAULT_EMAIL);
+        user.setCreatedBy(DEFAULT_CREATED_BY);
         return user;
     }
 
     @BeforeEach
     public void initTest() {
-        user = initTestUser(userRepository, em);
+        user = initTestUser(em);
     }
 
     @Test

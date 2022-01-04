@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.rjboyce.IntegrationTest;
 import com.rjboyce.domain.Event;
+import com.rjboyce.domain.Location;
 import com.rjboyce.repository.EventRepository;
 import com.rjboyce.service.dto.EventDTO;
 import com.rjboyce.service.mapper.EventMapper;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +40,8 @@ class EventResourceIT {
     private static final LocalDate DEFAULT_EVENT_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EVENT_DATE = LocalDate.now(ZoneId.systemDefault());
 
-    private static final String DEFAULT_EVENT_CODE = "AAAAAAAAAA";
-    private static final String UPDATED_EVENT_CODE = "BBBBBBBBBB";
+    private static final String DEFAULT_EVENT_CODE = UUID.randomUUID().toString();
+    private static final String UPDATED_EVENT_CODE = UUID.randomUUID().toString();
 
     private static final String ENTITY_API_URL = "/api/events";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -68,7 +70,10 @@ class EventResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Event createEntity(EntityManager em) {
-        Event event = new Event().eventDate(DEFAULT_EVENT_DATE);
+        Location location = new Location().locationName("location A");
+        em.persist(location);
+
+        Event event = new Event().eventDate(DEFAULT_EVENT_DATE).location(location);
         return event;
     }
 
@@ -79,7 +84,10 @@ class EventResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Event createUpdatedEntity(EntityManager em) {
-        Event event = new Event().eventDate(UPDATED_EVENT_DATE);
+        Location location = new Location().locationName("location A");
+        em.persist(location);
+
+        Event event = new Event().eventDate(UPDATED_EVENT_DATE).location(location);
         return event;
     }
 
@@ -265,136 +273,6 @@ class EventResourceIT {
                 put(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
-            )
-            .andExpect(status().isMethodNotAllowed());
-
-        // Validate the Event in the database
-        List<Event> eventList = eventRepository.findAll();
-        assertThat(eventList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void partialUpdateEventWithPatch() throws Exception {
-        // Initialize the database
-        eventRepository.saveAndFlush(event);
-
-        int databaseSizeBeforeUpdate = eventRepository.findAll().size();
-
-        // Update the Event using partial update
-        Event partialUpdatedEvent = new Event();
-        partialUpdatedEvent.setId(event.getId());
-
-        restEventMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedEvent.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEvent))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the Event in the database
-        List<Event> eventList = eventRepository.findAll();
-        assertThat(eventList).hasSize(databaseSizeBeforeUpdate);
-        Event testEvent = eventList.get(eventList.size() - 1);
-        assertThat(testEvent.getEventDate()).isEqualTo(DEFAULT_EVENT_DATE);
-    }
-
-    @Test
-    @Transactional
-    void fullUpdateEventWithPatch() throws Exception {
-        // Initialize the database
-        eventRepository.saveAndFlush(event);
-
-        int databaseSizeBeforeUpdate = eventRepository.findAll().size();
-
-        // Update the Event using partial update
-        Event partialUpdatedEvent = new Event();
-        partialUpdatedEvent.setId(event.getId());
-
-        partialUpdatedEvent.eventDate(UPDATED_EVENT_DATE);
-
-        restEventMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedEvent.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEvent))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the Event in the database
-        List<Event> eventList = eventRepository.findAll();
-        assertThat(eventList).hasSize(databaseSizeBeforeUpdate);
-        Event testEvent = eventList.get(eventList.size() - 1);
-        assertThat(testEvent.getEventDate()).isEqualTo(UPDATED_EVENT_DATE);
-    }
-
-    @Test
-    @Transactional
-    void patchNonExistingEvent() throws Exception {
-        int databaseSizeBeforeUpdate = eventRepository.findAll().size();
-        event.setId(count.incrementAndGet());
-
-        // Create the Event
-        EventDTO eventDTO = eventMapper.toDto(event);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEventMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, eventDTO.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the Event in the database
-        List<Event> eventList = eventRepository.findAll();
-        assertThat(eventList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithIdMismatchEvent() throws Exception {
-        int databaseSizeBeforeUpdate = eventRepository.findAll().size();
-        event.setId(count.incrementAndGet());
-
-        // Create the Event
-        EventDTO eventDTO = eventMapper.toDto(event);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEventMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the Event in the database
-        List<Event> eventList = eventRepository.findAll();
-        assertThat(eventList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithMissingIdPathParamEvent() throws Exception {
-        int databaseSizeBeforeUpdate = eventRepository.findAll().size();
-        event.setId(count.incrementAndGet());
-
-        // Create the Event
-        EventDTO eventDTO = eventMapper.toDto(event);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEventMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(eventDTO))
             )
             .andExpect(status().isMethodNotAllowed());

@@ -66,6 +66,11 @@ public class EventAttendance implements Serializable {
         return this;
     }
 
+    public EventAttendance user(Volunteer volunteer) {
+        this.volunteer = volunteer;
+        return this;
+    }
+
     public String getSignIn() {
         return signIn;
     }

@@ -41,6 +41,11 @@ public class Volunteer extends User implements Serializable {
         return this;
     }
 
+    public Volunteer id(String id) {
+        this.setId(id);
+        return this;
+    }
+
     public void setHomeLocation(Location location) {
         this.homeLocation = location;
     }

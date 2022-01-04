@@ -19,12 +19,12 @@ insert into jhi_user_authority values ('c3cbff48-e75b-4a40-9555-0d70a7c0a364','R
 insert into jhi_user_authority values ('690be563-6fe5-4149-8ca2-5b0d006f619f','ROLE_ADMIN');
 
 
-insert into event values (1,'2021-10-30',"Social Seekers",10,'6:30 PM',"Kaster's Luck",1);
-insert into event values (2,'2021-10-29',"Meet And Greet",8,'8:30 PM',"Sangario's Italian",2);
-insert into event values (3,'2021-10-30',"Social Dinner",2,'7:00 PM',"Roundhouse Recreation",1);
-insert into event values (4,'2021-10-29',"Easy Dining",2,'5:30 PM',"Locke's Fish and Chips",2);
-insert into event values (5,'2021-10-30',"Newcomer",4,'4:45 PM',"Snarky Al Steakhouse",2);
-insert into event values (6,'2021-10-30',"Social Meet",6,'5:00 PM',"Loki's Best Roti",1);
+insert into event values (1,'2021-10-30','Social Seekers',10,'6:30 PM','Kasters Luck',1);
+insert into event values (2,'2021-10-29','Meet And Greet',8,'8:30 PM','Sangarios Italian',2);
+insert into event values (3,'2021-10-30','Social Dinner',2,'7:00 PM','Roundhouse Recreation',1);
+insert into event values (4,'2021-10-29','Easy Dining',2,'5:30 PM','Lockes Fish and Chips',2);
+insert into event values (5,'2021-10-30','Newcomer',4,'4:45 PM','Snarky Al Steakhouse',2);
+insert into event values (6,'2021-10-30','Social Meet',6,'5:00 PM','Lokis Best Roti',1);
 
 
 insert into event_attendance values (1,'4:30 PM','8:30 PM','80b-654-014',6,'1d95e100-35b5-4b0d-8830-824db3d2d99b');

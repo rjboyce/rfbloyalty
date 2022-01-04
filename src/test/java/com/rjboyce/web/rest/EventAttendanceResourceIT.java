@@ -7,12 +7,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.rjboyce.IntegrationTest;
+import com.rjboyce.domain.Event;
 import com.rjboyce.domain.EventAttendance;
+import com.rjboyce.domain.Volunteer;
 import com.rjboyce.repository.EventAttendanceRepository;
+import com.rjboyce.repository.VolunteerRepository;
 import com.rjboyce.service.dto.EventAttendanceDTO;
 import com.rjboyce.service.mapper.EventAttendanceMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -68,7 +72,16 @@ class EventAttendanceResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EventAttendance createEntity(EntityManager em) {
-        EventAttendance eventAttendance = new EventAttendance().userCode(DEFAULT_CODE);
+        Volunteer newVolunteer = new Volunteer();
+        newVolunteer.setId(UUID.randomUUID().toString());
+        newVolunteer.setLogin("test1");
+        newVolunteer.setCreatedBy("test1");
+        em.persist(newVolunteer);
+
+        Event event = new Event();
+        em.persist(event);
+
+        EventAttendance eventAttendance = new EventAttendance().userCode(DEFAULT_CODE).user(newVolunteer).event(event);
         return eventAttendance;
     }
 
@@ -173,6 +186,31 @@ class EventAttendanceResourceIT {
 
     @Test
     @Transactional
+    void getValidAttendanceCount() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        Volunteer nextVolunteer = new Volunteer();
+        nextVolunteer.setId(UUID.randomUUID().toString());
+        nextVolunteer.setLogin("test2");
+        nextVolunteer.setCreatedBy("test2");
+        em.persist(nextVolunteer);
+
+        EventAttendance newAttendance = new EventAttendance()
+            .userCode(UUID.randomUUID().toString())
+            .user(nextVolunteer)
+            .event(eventAttendance.getEvent());
+
+        eventAttendanceRepository.saveAndFlush(newAttendance);
+
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL + "?event=" + eventAttendance.getEvent().getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").value(2L));
+    }
+
+    @Test
+    @Transactional
     void putNewEventAttendance() throws Exception {
         // Initialize the database
         eventAttendanceRepository.saveAndFlush(eventAttendance);
@@ -252,11 +290,11 @@ class EventAttendanceResourceIT {
 
     @Test
     @Transactional
-    void putWithMissingIdPathParamRfbEventAttendance() throws Exception {
+    void putWithMissingIdPathParamEventAttendance() throws Exception {
         int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
         eventAttendance.setId(count.incrementAndGet());
 
-        // Create the RfbEventAttendance
+        // Create the EventAttendance
         EventAttendanceDTO eventAttendanceDTO = eventAttendanceMapper.toDto(eventAttendance);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
@@ -265,136 +303,6 @@ class EventAttendanceResourceIT {
                 put(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(eventAttendanceDTO))
-            )
-            .andExpect(status().isMethodNotAllowed());
-
-        // Validate the EventAttendance in the database
-        List<EventAttendance> eventAttendanceList = eventAttendanceRepository.findAll();
-        assertThat(eventAttendanceList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void partialUpdateRfbEventAttendanceWithPatch() throws Exception {
-        // Initialize the database
-        eventAttendanceRepository.saveAndFlush(eventAttendance);
-
-        int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
-
-        // Update the EventAttendance using partial update
-        EventAttendance partialUpdatedEventAttendance = new EventAttendance();
-        partialUpdatedEventAttendance.setId(eventAttendance.getId());
-
-        restEventAttendanceMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedEventAttendance.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEventAttendance))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the EventAttendance in the database
-        List<EventAttendance> eventAttendanceList = eventAttendanceRepository.findAll();
-        assertThat(eventAttendanceList).hasSize(databaseSizeBeforeUpdate);
-        EventAttendance testEventAttendance = eventAttendanceList.get(eventAttendanceList.size() - 1);
-        assertThat(testEventAttendance.getUserCode()).isEqualTo(DEFAULT_CODE);
-    }
-
-    @Test
-    @Transactional
-    void fullUpdateRfbEventAttendanceWithPatch() throws Exception {
-        // Initialize the database
-        eventAttendanceRepository.saveAndFlush(eventAttendance);
-
-        int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
-
-        // Update the EventAttendance using partial update
-        EventAttendance partialUpdatedEventAttendance = new EventAttendance();
-        partialUpdatedEventAttendance.setId(eventAttendance.getId());
-
-        partialUpdatedEventAttendance.userCode(NEW_CODE);
-
-        restEventAttendanceMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedEventAttendance.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEventAttendance))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the EventAttendance in the database
-        List<EventAttendance> eventAttendanceList = eventAttendanceRepository.findAll();
-        assertThat(eventAttendanceList).hasSize(databaseSizeBeforeUpdate);
-        EventAttendance testEventAttendance = eventAttendanceList.get(eventAttendanceList.size() - 1);
-        assertThat(testEventAttendance.getUserCode()).isEqualTo(NEW_CODE);
-    }
-
-    @Test
-    @Transactional
-    void patchNonExistingEventAttendance() throws Exception {
-        int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
-        eventAttendance.setId(count.incrementAndGet());
-
-        // Create the EventAttendance
-        EventAttendanceDTO eventAttendanceDTO = eventAttendanceMapper.toDto(eventAttendance);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEventAttendanceMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, eventAttendanceDTO.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(eventAttendanceDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the EventAttendance in the database
-        List<EventAttendance> eventAttendanceList = eventAttendanceRepository.findAll();
-        assertThat(eventAttendanceList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithIdMismatchEventAttendance() throws Exception {
-        int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
-        eventAttendance.setId(count.incrementAndGet());
-
-        // Create the EventAttendance
-        EventAttendanceDTO eventAttendanceDTO = eventAttendanceMapper.toDto(eventAttendance);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEventAttendanceMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(eventAttendanceDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the EventAttendance in the database
-        List<EventAttendance> eventAttendanceList = eventAttendanceRepository.findAll();
-        assertThat(eventAttendanceList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithMissingIdPathParamEventAttendance() throws Exception {
-        int databaseSizeBeforeUpdate = eventAttendanceRepository.findAll().size();
-        eventAttendance.setId(count.incrementAndGet());
-
-        // Create the EventAttendance
-        EventAttendanceDTO eventAttendanceDTO = eventAttendanceMapper.toDto(eventAttendance);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEventAttendanceMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(eventAttendanceDTO))
             )
             .andExpect(status().isMethodNotAllowed());

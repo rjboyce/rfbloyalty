@@ -33,6 +33,11 @@ public class Authority implements Serializable {
     @Column(length = 50)
     private String name;
 
+    public Authority name(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getName() {
         return name;
     }

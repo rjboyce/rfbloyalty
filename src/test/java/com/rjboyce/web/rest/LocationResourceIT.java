@@ -32,13 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class LocationResourceIT {
 
-    private static final String DEFAULT_LOCATION_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_LOCATION_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_LOCATION_NAME = "One Location";
+    private static final String UPDATED_LOCATION_NAME = "Another Location";
 
-    private static final Integer DEFAULT_RUN_DAY_OF_WEEK = 1;
-    private static final Integer UPDATED_RUN_DAY_OF_WEEK = 2;
-
-    private static final String ENTITY_API_URL = "/api/rfb-locations";
+    private static final String ENTITY_API_URL = "/api/locations";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static Random random = new Random();
@@ -89,7 +86,7 @@ class LocationResourceIT {
     @Transactional
     void createLocation() throws Exception {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
-        // Create the RfbLocation
+        // Create the Location
         LocationDTO locationDTO = locationMapper.toDto(location);
         restRfbLocationMockMvc
             .perform(
@@ -100,7 +97,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isCreated());
 
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeCreate + 1);
         Location testLocation = locationList.get(locationList.size() - 1);
@@ -110,7 +107,7 @@ class LocationResourceIT {
     @Test
     @Transactional
     void createLocationWithExistingId() throws Exception {
-        // Create the RfbLocation with an existing ID
+        // Create the Location with an existing ID
         location.setId(1L);
         LocationDTO locationDTO = locationMapper.toDto(location);
 
@@ -126,7 +123,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeCreate);
     }
@@ -137,7 +134,7 @@ class LocationResourceIT {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
-        // Get all the rfbLocationList
+        // Get all the Locations
         restRfbLocationMockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
@@ -152,7 +149,7 @@ class LocationResourceIT {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
-        // Get the rfbLocation
+        // Get the Location
         restRfbLocationMockMvc
             .perform(get(ENTITY_API_URL_ID, location.getId()))
             .andExpect(status().isOk())
@@ -164,7 +161,7 @@ class LocationResourceIT {
     @Test
     @Transactional
     void getNonExistingLocation() throws Exception {
-        // Get the rfbLocation
+        // Get the Location
         restRfbLocationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
@@ -176,9 +173,9 @@ class LocationResourceIT {
 
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
-        // Update the rfbLocation
+        // Update the Location
         Location updatedLocation = locationRepository.findById(location.getId()).get();
-        // Disconnect from session so that the updates on updatedRfbLocation are not directly saved in db
+        // Disconnect from session so that the updates on updatedLocation are not directly saved in db
         em.detach(updatedLocation);
         updatedLocation.locationName(UPDATED_LOCATION_NAME);
         LocationDTO locationDTO = locationMapper.toDto(updatedLocation);
@@ -192,7 +189,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
         Location testLocation = locationList.get(locationList.size() - 1);
@@ -205,7 +202,7 @@ class LocationResourceIT {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
         location.setId(count.incrementAndGet());
 
-        // Create the RfbLocation
+        // Create the Location
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -218,7 +215,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
     }
@@ -229,7 +226,7 @@ class LocationResourceIT {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
         location.setId(count.incrementAndGet());
 
-        // Create the RfbLocation
+        // Create the Location
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
@@ -242,7 +239,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
     }
@@ -253,7 +250,7 @@ class LocationResourceIT {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
         location.setId(count.incrementAndGet());
 
-        // Create the RfbLocation
+        // Create the Location
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
@@ -266,137 +263,7 @@ class LocationResourceIT {
             )
             .andExpect(status().isMethodNotAllowed());
 
-        // Validate the RfbLocation in the database
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void partialUpdateLocationWithPatch() throws Exception {
-        // Initialize the database
-        locationRepository.saveAndFlush(location);
-
-        int databaseSizeBeforeUpdate = locationRepository.findAll().size();
-
-        // Update the rfbLocation using partial update
-        Location partialUpdatedLocation = new Location();
-        partialUpdatedLocation.setId(location.getId());
-
-        restRfbLocationMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedLocation.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLocation))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the RfbLocation in the database
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-        Location testLocation = locationList.get(locationList.size() - 1);
-        assertThat(testLocation.getLocationName()).isEqualTo(DEFAULT_LOCATION_NAME);
-    }
-
-    @Test
-    @Transactional
-    void fullUpdateLocationWithPatch() throws Exception {
-        // Initialize the database
-        locationRepository.saveAndFlush(location);
-
-        int databaseSizeBeforeUpdate = locationRepository.findAll().size();
-
-        // Update the rfbLocation using partial update
-        Location partialUpdatedLocation = new Location();
-        partialUpdatedLocation.setId(location.getId());
-
-        partialUpdatedLocation.locationName(UPDATED_LOCATION_NAME);
-
-        restRfbLocationMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedLocation.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLocation))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the RfbLocation in the database
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-        Location testLocation = locationList.get(locationList.size() - 1);
-        assertThat(testLocation.getLocationName()).isEqualTo(UPDATED_LOCATION_NAME);
-    }
-
-    @Test
-    @Transactional
-    void patchNonExistingLocation() throws Exception {
-        int databaseSizeBeforeUpdate = locationRepository.findAll().size();
-        location.setId(count.incrementAndGet());
-
-        // Create the RfbLocation
-        LocationDTO locationDTO = locationMapper.toDto(location);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, locationDTO.getId())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(locationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the RfbLocation in the database
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithIdMismatchLocation() throws Exception {
-        int databaseSizeBeforeUpdate = locationRepository.findAll().size();
-        location.setId(count.incrementAndGet());
-
-        // Create the RfbLocation
-        LocationDTO locationDTO = locationMapper.toDto(location);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(locationDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        // Validate the RfbLocation in the database
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void patchWithMissingIdPathParamLocation() throws Exception {
-        int databaseSizeBeforeUpdate = locationRepository.findAll().size();
-        location.setId(count.incrementAndGet());
-
-        // Create the RfbLocation
-        LocationDTO locationDTO = locationMapper.toDto(location);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(locationDTO))
-            )
-            .andExpect(status().isMethodNotAllowed());
-
-        // Validate the RfbLocation in the database
+        // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
     }

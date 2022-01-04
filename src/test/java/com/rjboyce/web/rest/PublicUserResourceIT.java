@@ -6,10 +6,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.rjboyce.IntegrationTest;
-import com.rjboyce.config.TestSecurityConfiguration;
+import com.rjboyce.domain.Authority;
 import com.rjboyce.domain.User;
+import com.rjboyce.repository.AuthorityRepository;
 import com.rjboyce.repository.UserRepository;
 import com.rjboyce.security.AuthoritiesConstants;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +40,9 @@ class PublicUserResourceIT {
     private UserRepository userRepository;
 
     @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -45,6 +53,17 @@ class PublicUserResourceIT {
 
     private User user;
 
+    private List<Authority> authorities;
+
+    public static List<Authority> createAuthorities() {
+        Authority admin = new Authority().name(AuthoritiesConstants.ADMIN);
+        Authority volunteer = new Authority().name(AuthoritiesConstants.VOLUNTEER);
+        Authority organizer = new Authority().name(AuthoritiesConstants.ORGANIZER);
+        Authority attendee = new Authority().name(AuthoritiesConstants.ATTENDEE);
+
+        return new ArrayList<>(Arrays.asList(admin, volunteer, organizer, attendee));
+    }
+
     @BeforeEach
     public void setup() {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
@@ -53,7 +72,9 @@ class PublicUserResourceIT {
 
     @BeforeEach
     public void initTest() {
-        user = UserResourceIT.initTestUser(userRepository, em);
+        user = UserResourceIT.initTestUser(em);
+
+        authorities = createAuthorities();
     }
 
     @Test
@@ -76,11 +97,23 @@ class PublicUserResourceIT {
     @Test
     @Transactional
     void getAllAuthorities() throws Exception {
+        authorityRepository.saveAllAndFlush(authorities);
+
         restUserMockMvc
             .perform(get("/api/authorities").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+            .andExpect(
+                jsonPath("$")
+                    .value(
+                        hasItems(
+                            AuthoritiesConstants.VOLUNTEER,
+                            AuthoritiesConstants.ADMIN,
+                            AuthoritiesConstants.ORGANIZER,
+                            AuthoritiesConstants.ATTENDEE
+                        )
+                    )
+            );
     }
 }
