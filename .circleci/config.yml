@@ -36,7 +36,9 @@ jobs:
       # CircleCI needs additional configuration for integration tests (if separate test properties differ than those of the application)
       - run:
           environment:
-            SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+            #SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+            SPRING_DATASOURCE_TYPE: com.zaxxer.hikari.HikariDataSource
+            SPRING_DATASOURCE_HIKARI_AUTO_COMMIT: false
             SPRING_DATASOURCE_URL: jdbc:h2:mem:volunteerkind;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
             SPRING_JPA_GENERATE_DDL: true
             SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
