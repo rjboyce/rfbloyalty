@@ -36,6 +36,7 @@ jobs:
       # CircleCI needs additional configuration for integration tests (if separate test properties differ than those of the application)
       - run:
           environment:
+            SPRING_JPA_SHOW_SQL: true
             SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
             SPRING_DATASOURCE_TYPE: com.zaxxer.hikari.HikariDataSource
             SPRING_DATASOURCE_HIKARI_AUTO_COMMIT: false
@@ -43,6 +44,7 @@ jobs:
             SPRING_JPA_GENERATE_DDL: true
             SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
             SPRING_JPA_PROPERTIES_HIBERNATE_HBM2DDL_AUTO: none
+            SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
             SPRING_SQL_INIT_MODE: never
             #SPRING_JPA_DATABASE_PLATFORM: tech.jhipster.domain.util.FixedH2Dialect
             SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI: http://DO_NOT_CALL:9080/auth/realms/jhipster
