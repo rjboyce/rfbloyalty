@@ -124,14 +124,14 @@ public class VolunteerServiceImpl implements VolunteerService {
     @Override
     @Transactional(readOnly = true)
     public List<VolunteerDTO> findAll() {
-        log.debug("Request to get all ApplicationUsers");
+        log.debug("Request to get all Volunteers");
         return volunteerRepository.findAll().stream().map(volunteerMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<VolunteerDTO> findOne(String id) {
-        log.debug("Request to get ApplicationUser : {}", id);
+        log.debug("Request to get Volunteer : {}", id);
         return volunteerRepository.findById(id).map(volunteerMapper::toDto);
     }
 
@@ -143,7 +143,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     @Override
     @Transactional
     public void delete(String id) {
-        log.debug("Request to delete ApplicationUser : {}", id);
+        log.debug("Request to delete Volunteer : {}", id);
 
         String login = findOne(id).orElseThrow(NotFoundException::new).getLogin();
 
