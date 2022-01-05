@@ -15,6 +15,7 @@ import java.util.*;
 import javax.servlet.*;
 import org.h2.server.web.WebServlet;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.http.HttpHeaders;
@@ -58,14 +59,15 @@ class WebConfigurerTest {
         verify(servletContext, never()).addServlet(eq("H2Console"), any(WebServlet.class));
     }
 
-    //Using MySQL in Dev so we don't need this test and it will fail as H2 is completely disabled
-    /*@Test
+    @Test
     void shouldStartUpDevServletContext() throws ServletException {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT);
 
         assertThatCode(() -> webConfigurer.onStartup(servletContext)).doesNotThrowAnyException();
-        verify(servletContext).addServlet(eq("H2Console"), any(WebServlet.class));
-    }*/
+        //essentially would be the same test as above since MySql is used in both profiles currently --
+        //leaving here for reference
+        //verify(servletContext).addServlet(eq("H2Console"), any(WebServlet.class));
+    }
 
     @Test
     void shouldCustomizeServletContainer() {
