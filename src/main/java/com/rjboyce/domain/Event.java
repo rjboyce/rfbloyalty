@@ -99,6 +99,11 @@ public class Event implements Serializable {
         this.venue = venue;
     }
 
+    public Event projection(Long projection) {
+        this.setProjection(projection);
+        return this;
+    }
+
     public Long getProjection() {
         return projection;
     }
@@ -149,6 +154,11 @@ public class Event implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Event name(String name) {
+        this.setEventName(name);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

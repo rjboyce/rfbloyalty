@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.rjboyce.IntegrationTest;
+import com.rjboyce.domain.Event;
 import com.rjboyce.domain.Location;
 import com.rjboyce.repository.LocationRepository;
 import com.rjboyce.service.dto.LocationDTO;
@@ -51,7 +52,7 @@ class LocationResourceIT {
     private EntityManager em;
 
     @Autowired
-    private MockMvc restRfbLocationMockMvc;
+    private MockMvc restLocationMockMvc;
 
     private Location location;
 
@@ -66,17 +67,6 @@ class LocationResourceIT {
         return location;
     }
 
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Location createUpdatedEntity(EntityManager em) {
-        Location location = new Location().locationName(UPDATED_LOCATION_NAME);
-        return location;
-    }
-
     @BeforeEach
     public void initTest() {
         location = createEntity(em);
@@ -88,7 +78,7 @@ class LocationResourceIT {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
         // Create the Location
         LocationDTO locationDTO = locationMapper.toDto(location);
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
@@ -114,7 +104,7 @@ class LocationResourceIT {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
@@ -135,7 +125,7 @@ class LocationResourceIT {
         locationRepository.saveAndFlush(location);
 
         // Get all the Locations
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -150,7 +140,7 @@ class LocationResourceIT {
         locationRepository.saveAndFlush(location);
 
         // Get the Location
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(get(ENTITY_API_URL_ID, location.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -162,12 +152,12 @@ class LocationResourceIT {
     @Transactional
     void getNonExistingLocation() throws Exception {
         // Get the Location
-        restRfbLocationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restLocationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    void putNewLocation() throws Exception {
+    void updateLocation() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -180,7 +170,7 @@ class LocationResourceIT {
         updatedLocation.locationName(UPDATED_LOCATION_NAME);
         LocationDTO locationDTO = locationMapper.toDto(updatedLocation);
 
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, locationDTO.getId())
                     .with(csrf())
@@ -206,7 +196,7 @@ class LocationResourceIT {
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, locationDTO.getId())
                     .with(csrf())
@@ -230,7 +220,7 @@ class LocationResourceIT {
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .with(csrf())
@@ -254,7 +244,7 @@ class LocationResourceIT {
         LocationDTO locationDTO = locationMapper.toDto(location);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(
                 put(ENTITY_API_URL)
                     .with(csrf())
@@ -277,12 +267,44 @@ class LocationResourceIT {
         int databaseSizeBeforeDelete = locationRepository.findAll().size();
 
         // Delete the rfbLocation
-        restRfbLocationMockMvc
+        restLocationMockMvc
             .perform(delete(ENTITY_API_URL_ID, location.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    void verifyMatchedlocations() throws Exception {
+        locationRepository.saveAndFlush(location);
+
+        Location newLocation = new Location().locationName(UPDATED_LOCATION_NAME);
+        locationRepository.saveAndFlush(newLocation);
+
+        //two locations should contain the following passed parameter so should return two DTOs
+        restLocationMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "Location"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2L));
+    }
+
+    @Test
+    @Transactional
+    void verifyUnmatchedLocations() throws Exception {
+        locationRepository.saveAndFlush(location);
+
+        Location newLocation = new Location().locationName(UPDATED_LOCATION_NAME);
+        locationRepository.saveAndFlush(newLocation);
+
+        //no location name should contain the following parameter so should return no DTOs
+        restLocationMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "new"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(0L));
     }
 }

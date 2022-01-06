@@ -1,7 +1,6 @@
 package com.rjboyce.repository;
 
 import com.rjboyce.domain.Event;
-import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -18,13 +17,21 @@ import org.springframework.stereotype.Repository;
 public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<List<Event>> findByEventNameContainingIgnoreCase(String match);
 
+    /*
+    QUERY BREAKDOWN
+    return events where:
+    a) event date is after the CURRENT date
+    b) location matches
+    c) event projections have not been filled or matched
+    d) user has not registered for the event already
+    */
     @Query(
         value = "SELECT * FROM event EE WHERE EE.event_date > :date AND EE.location_id = :location AND " +
         "(SELECT COUNT(*) FROM event_attendance EA WHERE EE.id = EA.event_id AND EA.user_code IS NOT NULL " +
         "AND EA.user_code <> '') < EE.projection AND (SELECT COUNT(*) FROM event_attendance EA WHERE EE.id = EA.event_id AND EA.volunteer_id = :user) = 0",
         nativeQuery = true
     )
-    Page<Event> findByLocationDateCount(
+    Page<Event> findByDateLocationProjectionUserExist(
         Pageable pageable,
         @Param("date") String date,
         @Param("user") String user,

@@ -51,7 +51,7 @@ public interface EventService {
      */
     void delete(Long id);
 
-    Page<EventDTO> findByLocationDateCount(Pageable pageable, String date, String user, Long location);
+    Page<EventDTO> findByDateLocationProjectionUserExist(Pageable pageable, String date, String user, Long location);
 
     Page<EventDTO> findByDay(Pageable pageable, String date);
 }

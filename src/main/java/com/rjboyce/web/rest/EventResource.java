@@ -136,7 +136,7 @@ public class EventResource {
         @RequestParam(value = "location") Long location
     ) {
         log.debug("REST request to get a list of suggested events");
-        Page<EventDTO> page = eventService.findByLocationDateCount(pageable, date, user, location);
+        Page<EventDTO> page = eventService.findByDateLocationProjectionUserExist(pageable, date, user, location);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

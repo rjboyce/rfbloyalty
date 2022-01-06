@@ -32,18 +32,10 @@ public class EventServiceImpl implements EventService {
 
     private final LocationService locationService;
 
-    private final LocationMapper locationMapper;
-
-    public EventServiceImpl(
-        EventRepository eventRepository,
-        EventMapper eventMapper,
-        LocationService locationService,
-        LocationMapper locationMapper
-    ) {
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, LocationService locationService) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.locationService = locationService;
-        this.locationMapper = locationMapper;
     }
 
     @Override
@@ -93,9 +85,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EventDTO> findByLocationDateCount(Pageable pageable, String date, String user, Long location) {
+    public Page<EventDTO> findByDateLocationProjectionUserExist(Pageable pageable, String date, String user, Long location) {
         log.debug("Request to get suggested Events");
-        return eventRepository.findByLocationDateCount(pageable, date, user, location).map(eventMapper::toDto);
+        return eventRepository.findByDateLocationProjectionUserExist(pageable, date, user, location).map(eventMapper::toDto);
     }
 
     @Override

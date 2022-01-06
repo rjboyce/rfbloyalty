@@ -185,7 +185,7 @@ public class EventAttendanceResource {
 
     //Validate a sign in/out code and return matching record if code matches or an empty object if bad code
     @GetMapping(value = "/event-attendances", params = { "event", "usercode" })
-    public ResponseEntity<EventAttendanceDTO> validateSignInOut(
+    public ResponseEntity<EventAttendanceDTO> validateCodeAndReturn(
         @RequestParam(value = "event") Long event,
         @RequestParam(value = "usercode") String userCode
     ) {

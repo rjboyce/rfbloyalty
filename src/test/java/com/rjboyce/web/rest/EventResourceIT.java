@@ -12,9 +12,9 @@ import com.rjboyce.domain.Location;
 import com.rjboyce.repository.EventRepository;
 import com.rjboyce.service.dto.EventDTO;
 import com.rjboyce.service.mapper.EventMapper;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -39,9 +39,6 @@ class EventResourceIT {
 
     private static final LocalDate DEFAULT_EVENT_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EVENT_DATE = LocalDate.now(ZoneId.systemDefault());
-
-    private static final String DEFAULT_EVENT_CODE = UUID.randomUUID().toString();
-    private static final String UPDATED_EVENT_CODE = UUID.randomUUID().toString();
 
     private static final String ENTITY_API_URL = "/api/events";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -73,21 +70,7 @@ class EventResourceIT {
         Location location = new Location().locationName("location A");
         em.persist(location);
 
-        Event event = new Event().eventDate(DEFAULT_EVENT_DATE).location(location);
-        return event;
-    }
-
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Event createUpdatedEntity(EntityManager em) {
-        Location location = new Location().locationName("location A");
-        em.persist(location);
-
-        Event event = new Event().eventDate(UPDATED_EVENT_DATE).location(location);
+        Event event = new Event().eventDate(DEFAULT_EVENT_DATE).location(location).name("tiktok one");
         return event;
     }
 
@@ -181,7 +164,7 @@ class EventResourceIT {
 
     @Test
     @Transactional
-    void putNewEvent() throws Exception {
+    void updateEvent() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
 
@@ -298,5 +281,84 @@ class EventResourceIT {
         // Validate the database contains one less item
         List<Event> eventList = eventRepository.findAll();
         assertThat(eventList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    void verifyMatchedEvents() throws Exception {
+        eventRepository.saveAndFlush(event);
+
+        Event newEvent = new Event().location(event.getLocation()).name("tiktoe two");
+        eventRepository.saveAndFlush(newEvent);
+
+        //two events should contain the following passed parameter so should return two DTOs
+        restEventMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "tik"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2L));
+    }
+
+    @Test
+    @Transactional
+    void verifyUnmatchedEvents() throws Exception {
+        eventRepository.saveAndFlush(event);
+
+        Event newEvent = new Event().location(event.getLocation()).name("tiktoe two");
+        eventRepository.saveAndFlush(newEvent);
+
+        //no event name should contain the following parameter so should return no DTOs
+        restEventMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "doe"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(0L));
+    }
+
+    @Test
+    @Transactional
+    void verifySuggestedEvents() throws Exception {
+        List<Event> newEvents = new ArrayList<>();
+        newEvents.add(event);
+        newEvents.add(
+            new Event().eventDate(DEFAULT_EVENT_DATE.plusDays(30L)).location(event.getLocation()).name("Rob's Event").projection(3L)
+        );
+        newEvents.add(
+            new Event().eventDate(DEFAULT_EVENT_DATE.plusDays(30L)).location(event.getLocation()).name("Rob's Second Event").projection(3L)
+        );
+        eventRepository.saveAllAndFlush(newEvents);
+
+        String user = UUID.randomUUID().toString();
+
+        restEventMockMvc
+            .perform(
+                get(ENTITY_API_URL)
+                    .param("date", DEFAULT_EVENT_DATE.toString())
+                    .param("user", user)
+                    .param("location", String.valueOf(event.getLocation().getId().intValue()))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2L));
+    }
+
+    @Test
+    @Transactional
+    void verifyDayEvents() throws Exception {
+        List<Event> newEvents = new ArrayList<>();
+        newEvents.add(event);
+        newEvents.add(
+            new Event().eventDate(DEFAULT_EVENT_DATE.plusDays(30L)).location(event.getLocation()).name("Rob's Event").projection(3L)
+        );
+        newEvents.add(
+            new Event().eventDate(DEFAULT_EVENT_DATE.plusDays(30L)).location(event.getLocation()).name("Rob's Second Event").projection(3L)
+        );
+        eventRepository.saveAllAndFlush(newEvents);
+
+        restEventMockMvc
+            .perform(get(ENTITY_API_URL).param("date", DEFAULT_EVENT_DATE.plusDays(30L).toString()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2L));
     }
 }

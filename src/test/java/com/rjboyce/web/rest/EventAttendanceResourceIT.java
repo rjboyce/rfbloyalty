@@ -11,15 +11,13 @@ import com.rjboyce.domain.Event;
 import com.rjboyce.domain.EventAttendance;
 import com.rjboyce.domain.Volunteer;
 import com.rjboyce.repository.EventAttendanceRepository;
+import com.rjboyce.repository.EventRepository;
 import com.rjboyce.repository.VolunteerRepository;
 import com.rjboyce.service.dto.EventAttendanceDTO;
 import com.rjboyce.service.mapper.EventAttendanceMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,11 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class EventAttendanceResourceIT {
 
-    private static final LocalDate DEFAULT_ATTENDANCE_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_ATTENDANCE_DATE = LocalDate.now(ZoneId.systemDefault());
-
     private static final String DEFAULT_CODE = UUID.randomUUID().toString();
     private static final String NEW_CODE = UUID.randomUUID().toString();
+
+    private static final String NEW_USER = UUID.randomUUID().toString();
 
     private static final String ENTITY_API_URL = "/api/event-attendances";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -53,6 +50,9 @@ class EventAttendanceResourceIT {
 
     @Autowired
     private EventAttendanceRepository eventAttendanceRepository;
+
+    @Autowired
+    private VolunteerRepository volunteerRepository;
 
     @Autowired
     private EventAttendanceMapper eventAttendanceMapper;
@@ -73,7 +73,7 @@ class EventAttendanceResourceIT {
      */
     public static EventAttendance createEntity(EntityManager em) {
         Volunteer newVolunteer = new Volunteer();
-        newVolunteer.setId(UUID.randomUUID().toString());
+        newVolunteer.setId(NEW_USER);
         newVolunteer.setLogin("test1");
         newVolunteer.setCreatedBy("test1");
         em.persist(newVolunteer);
@@ -81,19 +81,7 @@ class EventAttendanceResourceIT {
         Event event = new Event();
         em.persist(event);
 
-        EventAttendance eventAttendance = new EventAttendance().userCode(DEFAULT_CODE).user(newVolunteer).event(event);
-        return eventAttendance;
-    }
-
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static EventAttendance createUpdatedEntity(EntityManager em) {
-        EventAttendance eventAttendance = new EventAttendance().userCode(NEW_CODE);
-        return eventAttendance;
+        return new EventAttendance().userCode(DEFAULT_CODE).user(newVolunteer).event(event);
     }
 
     @BeforeEach
@@ -207,6 +195,82 @@ class EventAttendanceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").value(2L));
+
+        em.detach(nextVolunteer);
+    }
+
+    @Test
+    @Transactional
+    void checkVolunteerEventAttendanceExists() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL).param("event", eventAttendance.getEvent().getId().toString()).param("user", NEW_USER))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").value(1L));
+    }
+
+    @Test
+    @Transactional
+    void checkVolunteerEventAttendanceNotExist() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL).param("event", eventAttendance.getEvent().getId().toString()).param("user", "anotheruser"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").value(0L));
+    }
+
+    @Test
+    @Transactional
+    void validatedCodeAndReturn() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        //If code valid a DTO is returned as an Optional, ensure fields match parameter values
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL).param("event", eventAttendance.getEvent().getId().toString()).param("usercode", DEFAULT_CODE))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("eventId").value(eventAttendance.getEvent().getId()))
+            .andExpect(jsonPath("userCode").value(DEFAULT_CODE)); //remove "hasItem" to evaluate optionals, no special characters used for jsonpath
+    }
+
+    @Test
+    @Transactional
+    void invalidatedCodeAndReturnEmpty() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        //If code is invalid an empty optional is returned
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL).param("event", eventAttendance.getEvent().getId().toString()).param("usercode", "invalidcode"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.id").isEmpty());
+    }
+
+    @Test
+    @Transactional
+    void getAllEventAttendancesByVolunteer() throws Exception {
+        eventAttendanceRepository.saveAndFlush(eventAttendance);
+
+        Event event = new Event();
+        em.persist(event);
+
+        Volunteer currentVolunteer = volunteerRepository.findById(NEW_USER).get();
+
+        EventAttendance newAttendance = new EventAttendance().userCode(NEW_CODE).user(currentVolunteer).event(event);
+
+        eventAttendanceRepository.saveAndFlush(newAttendance);
+
+        restEventAttendanceMockMvc
+            .perform(get(ENTITY_API_URL).param("user", NEW_USER))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2));
+
+        em.detach(event);
     }
 
     @Test

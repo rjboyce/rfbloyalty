@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.rjboyce.IntegrationTest;
+import com.rjboyce.domain.Location;
 import com.rjboyce.domain.Volunteer;
 import com.rjboyce.repository.VolunteerRepository;
 import com.rjboyce.service.KeycloakServices;
@@ -19,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -76,7 +76,7 @@ class VolunteerResourceIT {
     private EntityManager em;
 
     @Autowired
-    private MockMvc restApplicationUserMockMvc;
+    private MockMvc restVolunteerMockMvc;
 
     @Mock
     private KeycloakServices keycloakServices;
@@ -102,25 +102,6 @@ class VolunteerResourceIT {
         return volunteer;
     }
 
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Volunteer createUpdatedEntity(EntityManager em) {
-        Volunteer volunteer = new Volunteer();
-        volunteer.setId(UPDATED_ID);
-        volunteer.setLogin(UPDATED_LOGIN);
-        volunteer.setFirstName(UPDATED_FIRST_NAME);
-        volunteer.setLastName(UPDATED_LAST_NAME);
-        volunteer.setEmail(UPDATED_EMAIL);
-        volunteer.setLangKey(UPDATED_LANG_KEY);
-        volunteer.setImageUrl(UPDATED_IMAGE_URL);
-        volunteer.setCreatedBy(UPDATED_CREATED_BY);
-        return volunteer;
-    }
-
     @BeforeEach
     public void initTest() {
         volunteer = createEntity(em);
@@ -136,7 +117,7 @@ class VolunteerResourceIT {
 
         // Create the ApplicationUser
         VolunteerDTO volunteerDTO = volunteerMapper.toDto(volunteer);
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
@@ -167,7 +148,7 @@ class VolunteerResourceIT {
         int databaseSizeBeforeCreate = volunteerRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
@@ -188,7 +169,7 @@ class VolunteerResourceIT {
         volunteerRepository.saveAndFlush(volunteer);
 
         // Get all the applicationUserList
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -208,7 +189,7 @@ class VolunteerResourceIT {
         volunteerRepository.saveAndFlush(volunteer);
 
         // Get the applicationUser
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(get(ENTITY_API_URL_ID, volunteer.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -225,7 +206,7 @@ class VolunteerResourceIT {
     @Transactional
     void getNonExistingVolunteer() throws Exception {
         // Get the applicationUser
-        restApplicationUserMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restVolunteerMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -250,7 +231,7 @@ class VolunteerResourceIT {
 
         VolunteerDTO volunteerDTO = volunteerMapper.toDto(updatedVolunteer);
 
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, volunteerDTO.getId())
                     .with(csrf())
@@ -281,7 +262,7 @@ class VolunteerResourceIT {
         VolunteerDTO volunteerDTO = volunteerMapper.toDto(volunteer);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, volunteerDTO.getId())
                     .with(csrf())
@@ -305,7 +286,7 @@ class VolunteerResourceIT {
         VolunteerDTO volunteerDTO = volunteerMapper.toDto(volunteer);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .with(csrf())
@@ -329,7 +310,7 @@ class VolunteerResourceIT {
         VolunteerDTO volunteerDTO = volunteerMapper.toDto(volunteer);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(
                 put(ENTITY_API_URL)
                     .with(csrf())
@@ -353,12 +334,57 @@ class VolunteerResourceIT {
         int databaseSizeBeforeDelete = volunteerRepository.findAll().size();
 
         // Delete the applicationUser
-        restApplicationUserMockMvc
+        restVolunteerMockMvc
             .perform(delete(ENTITY_API_URL_ID, volunteer.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Volunteer> volunteerList = volunteerRepository.findAll();
         assertThat(volunteerList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    void verifyMatchedVolunteersByLogin() throws Exception {
+        volunteerRepository.saveAndFlush(volunteer);
+
+        Volunteer newVolunteer = new Volunteer().id(UPDATED_ID).login(UPDATED_LOGIN).createdBy(UPDATED_CREATED_BY);
+        volunteerRepository.saveAndFlush(newVolunteer);
+
+        //two volunteers should contain the following passed parameter so should return two DTOs
+        restVolunteerMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "login"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2L));
+    }
+
+    @Test
+    @Transactional
+    void verifyUnmatchedVolunteersByLogin() throws Exception {
+        volunteerRepository.saveAndFlush(volunteer);
+
+        Volunteer newVolunteer = new Volunteer().id(UPDATED_ID).login(UPDATED_LOGIN).createdBy(UPDATED_CREATED_BY);
+        volunteerRepository.saveAndFlush(newVolunteer);
+
+        //no Volunteer logins should contain the following parameter so should return no DTOs
+        restVolunteerMockMvc
+            .perform(get(ENTITY_API_URL).param("match", "any"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(0L));
+    }
+
+    @Test
+    @Transactional
+    void getUserByLogin() throws Exception {
+        volunteerRepository.saveAndFlush(volunteer);
+
+        restVolunteerMockMvc
+            .perform(get(ENTITY_API_URL).param("login", DEFAULT_LOGIN))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.login").value(DEFAULT_LOGIN))
+            .andExpect(jsonPath("$.id").value(DEFAULT_ID));
     }
 }
