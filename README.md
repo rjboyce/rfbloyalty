@@ -79,6 +79,12 @@ will simply remove that location from associated users.  Users are otherwise lef
 
 ## Changelog
 
+### v0.3.4
+
+```
+- Social login fix for Facebook
+```
+
 ### v0.3.3
 
 ```

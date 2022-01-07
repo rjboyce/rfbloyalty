@@ -101,7 +101,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/member").hasAnyAuthority(AuthoritiesConstants.ADMIN,AuthoritiesConstants.USER)
+            .antMatchers("/member").authenticated()
         .and()
             .oauth2Login()
             .defaultSuccessUrl(host)
