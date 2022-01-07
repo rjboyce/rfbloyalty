@@ -2,11 +2,11 @@
 
 [![CircleCI](https://circleci.com/gh/rjboyce/volunteerkind/tree/angular12.svg?style=svg)](https://circleci.com/gh/rjboyce/volunteerkind/tree/angular12)
 
-This application was generated using JHipster 7.2.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.2.0](https://www.jhipster.tech/documentation-archive/v7.2.0).
+This application was generated/updated using JHipster 7.3.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.3.1](https://www.jhipster.tech/documentation-archive/v7.3.1).
 Jhipster generated code has been greatly modified to accommodate application needs.
 
 This application is based on a project at the end of the Udemy course [Angular 4 Java Developers](https://www.udemy.com/course/angular-4-java-developers/?src=sac&kw=angular+4),
-but with many changes and upgrades to support current technologies and to meet the needs of the Volunteer Kind application. Additional features include:
+but as a different project with many changes and upgrades to support current technologies. Additional features include:
 
 ```
 - Keycloak Integration (OAuth 2.0 and OpenID)
@@ -75,4 +75,31 @@ independently, but be warned that removing events currently will automatically r
 attendances.  This will change in the future to support user tracking.  Also, deleting a location
 will simply remove that location from associated users.  Users are otherwise left intact.
 
+```
+
+## Changelog
+
+### v0.3.3
+
+```
+- Image fix for faster loading
+```
+
+### v0.3.2
+
+```
+- Web layout overhaul
+- Compatability fix for both PC and mobile browsing
+```
+
+### v0.3.0
+
+```
+- Jhipster dependency upgrade
+```
+
+### v0.2.6
+
+```
+- Initial feature release with basic layout (User control with basic organization management and data remodel)
 ```
