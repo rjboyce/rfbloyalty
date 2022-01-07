@@ -82,7 +82,7 @@ will simply remove that location from associated users.  Users are otherwise lef
 ### v0.3.3
 
 ```
-- Image fix for faster loading
+- Image fix for faster home page loading
 ```
 
 ### v0.3.2
@@ -95,11 +95,16 @@ will simply remove that location from associated users.  Users are otherwise lef
 ### v0.3.0
 
 ```
-- Jhipster dependency upgrade
+- Jhipster dependency upgrade to v7.3.1
 ```
 
 ### v0.2.6
 
 ```
-- Initial feature release with basic layout (User control with basic organization management and data remodel)
+- Initial feature release with basic layout
+- User control with basic organization management and data remodel
+- Event Suggestion tool
+- Daily event listings
+- Basic event login/logout
+- Keycloak overhaul for better security
 ```
