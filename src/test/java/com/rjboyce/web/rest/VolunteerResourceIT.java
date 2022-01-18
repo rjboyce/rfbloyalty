@@ -1,7 +1,10 @@
 package com.rjboyce.web.rest;
 
+import static com.tngtech.keycloakmock.api.ServerConfig.aServerConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -11,16 +14,23 @@ import com.rjboyce.domain.Location;
 import com.rjboyce.domain.Volunteer;
 import com.rjboyce.repository.VolunteerRepository;
 import com.rjboyce.service.KeycloakServices;
+import com.rjboyce.service.VolunteerService;
 import com.rjboyce.service.dto.VolunteerDTO;
 import com.rjboyce.service.mapper.VolunteerMapper;
+import com.tngtech.keycloakmock.api.KeycloakMock;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
+import liquibase.pro.packaged.V;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -78,8 +88,8 @@ class VolunteerResourceIT {
     @Autowired
     private MockMvc restVolunteerMockMvc;
 
-    @Mock
-    private KeycloakServices keycloakServices;
+    //@Mock
+    //private KeycloakServices keycloakServices;
 
     private Volunteer volunteer;
 
@@ -329,9 +339,16 @@ class VolunteerResourceIT {
     void deleteVolunteer() throws Exception {
         // Initialize the database
         volunteerRepository.saveAndFlush(volunteer);
-        keycloakServices.saveToIdp(volunteer);
 
         int databaseSizeBeforeDelete = volunteerRepository.findAll().size();
+
+        /*VolunteerService volunteerService = mock(VolunteerService.class);
+        doAnswer( inv -> {
+            volunteerRepository.deleteById(volunteer.getId());
+            return null;
+        }).when(volunteerService).delete(volunteer.getId());
+
+        volunteerService.delete(volunteer.getId());*/
 
         // Delete the applicationUser
         restVolunteerMockMvc

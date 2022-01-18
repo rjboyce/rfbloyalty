@@ -311,6 +311,13 @@
             <artifactId>keycloak-admin-client</artifactId>
             <version>14.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.tngtech.keycloakmock</groupId>
+            <artifactId>mock</artifactId>
+            <scope>test</scope>
+            <version>0.11.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter -->
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
