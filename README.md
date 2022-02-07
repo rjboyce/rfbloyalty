@@ -23,7 +23,17 @@ but as a different project with many changes and upgrades to support current tec
 
 ```
 
-You may fork this repository and run on your local machine or check out my demo [https://www.vkind.site](https://www.vkind.site).
+You may fork this repository and run on your local machine. Note: You will need to run your own instance of KeyCloak as I am currently in the process
+of setting up brand new server provisions to be more lightweight (and with a new OS). Running the following requires you have docker with docker-compose:
+
+```
+**DO THIS FIRST**
+The entire environment section in the following yml file will need to be DISABLED and if you plan on testing dummy
+emails, the maildev section will need to be ENABLED.  The test user data has been set up with dummy emails in the json
+files (realm-config folder) as well as the database script, but maildev will only be needed with runtime additions.
+
+docker-compose -f src/main/docker/keycloak.yml up
+```
 
 `Running this Application locally requires Node.js (latest LTS) and the most recent JDK 11`
 

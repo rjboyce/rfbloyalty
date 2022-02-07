@@ -2,9 +2,9 @@ insert into location values (1,'Toronto, ON - CANADA');
 insert into location values (2,'Vancouver, BC - CANADA');
 
 
-insert into jhi_user values ('Volunteer','1d95e100-35b5-4b0d-8830-824db3d2d99b','greywind','Akshay','Bay','blacksoul4202@gmail.com',null,true,'en','system','2021-08-19 23:50:00','system','2021-08-19 23:50:00','47','416-715-9003',1);
-insert into jhi_user values ('Volunteer','c3cbff48-e75b-4a40-9555-0d70a7c0a364','tysidius','Tysidius','Tywin','rjboyce.data42@gmail.com',null,true,'en','system','2021-08-19 23:50:00','system','2021-08-19 23:50:00','134','416-588-3317',1);
-insert into jhi_user values ('Volunteer','690be563-6fe5-4149-8ca2-5b0d006f619f','admin','Master','Administrator','response@vkind.site',null,true,'en','system','2021-09-13 16:46:54','system','2021-09-13 16:46:54',null,'416-032-2111',1);
+insert into jhi_user values ('Volunteer','1d95e100-35b5-4b0d-8830-824db3d2d99b','greywind','Akshay','Bay','akshay@greywind.com',null,true,'en','system','2021-08-19 23:50:00','system','2021-08-19 23:50:00','47','416-715-9003',1);
+insert into jhi_user values ('Volunteer','c3cbff48-e75b-4a40-9555-0d70a7c0a364','tysidius','Tysidius','Tywin','tywin@tysidius.com',null,true,'en','system','2021-08-19 23:50:00','system','2021-08-19 23:50:00','134','416-588-3317',1);
+insert into jhi_user values ('Volunteer','690be563-6fe5-4149-8ca2-5b0d006f619f','admin','Master','Administrator','master@admin.com',null,true,'en','system','2021-09-13 16:46:54','system','2021-09-13 16:46:54',null,'416-032-2111',1);
 
 
 insert into jhi_authority values ('ROLE_ADMIN');

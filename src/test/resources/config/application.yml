@@ -12,10 +12,10 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
-
 kc:
+  server: http://DO_NOT_CALL:9080/auth
   realm: jhipster
-  user:
+  user: TEST_USER
   password:
   client:
 
